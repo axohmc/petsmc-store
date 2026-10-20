@@ -37,6 +37,9 @@ window.PM_CONFIG = {
     { match: 'egg',      colour: 'green',  art: ['card_egg'], icon: 'card_egg' },
     { match: '',         colour: 'steel',  art: ['card_gemchest'], icon: 'card_gemchest' }
   ],
+  /* High-res icons (transparent PNG / WebP in assets/icons/) that replace the pixel art of the same name, for example
+   * pack_0: 'gems-1000.png'. A name not listed keeps the pixel art. */
+  icons: {},
   /* Footer links to the store's own pages once written (terms, privacy, refunds): {label, url} */
   links: []
 };

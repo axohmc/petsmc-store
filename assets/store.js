@@ -27,6 +27,8 @@
   function art(name) { return 'assets/img/' + name + '.png'; }
   function pkgImage(p) { return p.image || art(p._look.art[Math.min(p._index, p._look.art.length - 1)]); }
   function imgTag(src, alt) {
+    var m = /^assets\/img\/(\w+)\.png$/.exec(src);
+    if (m && C.icons && C.icons[m[1]]) src = 'assets/icons/' + C.icons[m[1]]; // a high-res icon replaces the pixel art
     var px = src.indexOf('assets/img/') === 0;
     return '<img' + (px ? ' class="px"' : '') + ' src="' + esc(src) + '" alt="' + esc(alt || '') + '" loading="lazy">';
   }
