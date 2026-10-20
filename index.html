@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>PetsMC Store</title>
+<meta name="description" content="The official PetsMC store: Gems, ranks, the Pet Pass and the Pet Club. Cosmetics and comforts only.">
+<meta name="theme-color" content="#ff4da9">
+<link rel="icon" type="image/png" href="assets/img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;800;900&display=swap">
+<link rel="stylesheet" href="assets/store.css">
+</head>
+<body>
+
+<!-- Coming-soon gate (config.js gateHash). Not real security: it keeps a passer-by out until launch. -->
+<div class="gate" id="gate" hidden>
+  <form class="gate__card" id="gateForm" autocomplete="off">
+    <img class="gate__logo" src="assets/img/logo.png" alt="" width="132" height="132">
+    <h1 class="lab lab--ink c-pink s5">PetsMC Store</h1>
+    <p class="gate__text">The store opens very soon. Got the password?</p>
+    <label class="sr" for="gatePass">Password</label>
+    <input class="field" id="gatePass" type="password" placeholder="Password" autocomplete="off">
+    <p class="gate__err" id="gateErr" hidden>That is not it. Try again.</p>
+    <button class="btn btn--wide c-green" type="submit"><span class="lab lab--btn s3">Enter</span></button>
+    <p class="gate__ip">Meanwhile, come play: <b>play.petsmc.net</b></p>
+  </form>
+</div>
+
+<div class="app" id="app" hidden>
+  <div class="sample" id="sample" hidden>SAMPLE STORE: proposed packs and prices, nothing can be bought yet.</div>
+
+  <header class="header" id="header">
+    <nav class="header__bar wrap">
+      <div class="header__col">
+        <a class="ibtn" id="homeBtn" href="#top" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></a>
+        <button class="ibtn" id="menuBtn" type="button" aria-label="Categories"><svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+        <button class="btn btn--s c-blue play hide-md" type="button" data-play><span class="lab lab--btn s2" data-ip>play.petsmc.net</span></button>
+      </div>
+      <div class="header__col header__mid">
+        <a class="brand" href="#top" aria-label="PetsMC Store, back to the top">
+          <img src="assets/img/logo.png" alt="" width="48" height="48">
+          <span class="lab lab--ink c-pink s4 hide-sm">PetsMC</span>
+        </a>
+      </div>
+      <div class="header__col header__end">
+        <button class="btn btn--s c-pink login" id="loginBtn" type="button">
+          <img class="avatar" id="loginAvatar" src="assets/img/icon.png" alt="" width="28" height="28">
+          <span class="lab lab--btn s2 hide-sm" id="loginLabel">Login</span>
+        </button>
+        <button class="btn btn--s c-green" id="cartBtn" type="button" aria-label="Cart">
+          <svg class="svgi" viewBox="0 0 24 24"><path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM1 2v2h2l3.6 7.6-1.4 2.4A2 2 0 0 0 7 17h12v-2H7.4l1.1-2h7.5a2 2 0 0 0 1.7-1l3.6-6.5A1 1 0 0 0 20.4 4H5.2l-.9-2H1zm16 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
+          <span class="lab lab--btn s2"><span class="hide-sm">Cart </span><span id="cartCount">0</span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <div class="hero__rays" aria-hidden="true"></div>
+      <div class="hero__text">
+        <h1 class="lab lab--btn c-pink s6" id="heroTitle">PetsMC Store</h1>
+        <p id="heroSub"></p>
+        <div class="hero__ip">
+          <button class="btn c-blue" type="button" data-play><span class="lab lab--btn s3" data-ip>play.petsmc.net</span></button>
+          <span class="hero__bedrock" id="heroBedrock"></span>
+        </div>
+      </div>
+      <img class="hero__cat" src="assets/img/logo.png" alt="" width="300" height="300">
+    </section>
+
+    <div class="wrap">
+      <div class="cats" id="cats"></div>
+      <div id="sections"><div class="loading"><span class="spin"></span></div></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__store wrap">
+      <p class="footer__copy">&copy; <span id="year"></span> PetsMC. All rights reserved.</p>
+      <div class="footer__links">
+        <button class="btn btn--s c-blue" type="button" data-play><span class="lab lab--btn s2" data-ip>play.petsmc.net</span></button>
+        <a class="btn btn--s c-purple" id="discordBtn" href="#" hidden><span class="lab lab--btn s2">Join our Discord</span></a>
+      </div>
+    </div>
+    <div class="footer__tebex">
+      <div class="footer__tebex-in wrap">
+        <p>This website and its checkout process is operated by our online reseller and Merchant of Record, Tebex Limited, who also handles order-related inquiries and refunds.</p>
+        <p class="footer__legal">
+          <a href="https://checkout.tebex.io/impressum" rel="noopener">Impressum</a>
+          <a href="https://checkout.tebex.io/terms" rel="noopener">Terms of Service</a>
+          <a href="https://checkout.tebex.io/privacy" rel="noopener">Privacy Policy</a>
+          <span id="ownLinks"></span>
+        </p>
+        <p class="footer__mojang">NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- Menu sidebar (left), cart sidebar (right), the modal and the toasts -->
+<div class="overlay" id="overlay" hidden></div>
+<aside class="side side--left" id="menuSide" aria-label="Categories" aria-hidden="true">
+  <div class="side__head"><span class="lab lab--ink c-pink s4">Categories</span><button class="ibtn" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19l5.6-5.6 5.6 5.6 1.4-1.4-5.6-5.6z"/></svg></button></div>
+  <nav class="side__body menu" id="menuList"></nav>
+</aside>
+<aside class="side side--right" id="cartSide" aria-label="Cart" aria-hidden="true">
+  <div class="side__head"><span class="lab lab--ink c-green s4">Your cart</span><button class="ibtn" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19l5.6-5.6 5.6 5.6 1.4-1.4-5.6-5.6z"/></svg></button></div>
+  <div class="side__body cart" id="cartList"></div>
+  <div class="side__foot">
+    <div class="cart__total" id="cartTotal" hidden><span>Total</span><span class="lab lab--ink c-gold s4" id="cartTotalVal"></span></div>
+    <button class="btn btn--wide c-green" id="checkoutBtn" type="button" disabled><span class="lab lab--btn s3">Proceed to checkout</span></button>
+  </div>
+</aside>
+<div class="modal" id="modal" role="dialog" aria-modal="true" hidden>
+  <div class="modal__card" id="modalCard">
+    <button class="ibtn modal__x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19l5.6-5.6 5.6 5.6 1.4-1.4-5.6-5.6z"/></svg></button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="assets/config.js"></script>
+<script src="assets/demo.js"></script>
+<script src="assets/store.js"></script>
+</body>
+</html>
