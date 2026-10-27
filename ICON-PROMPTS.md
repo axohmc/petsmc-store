@@ -3,10 +3,13 @@
 High-res icons that replace the pixel art on store.petsmc.net. Generate 1:1, then save each as a transparent PNG
 (512 px is plenty) in `assets/icons/` and list it in `icons` in `assets/config.js` under the art name in the first column.
 
-**Shared style** (put before every prompt): a single chunky Minecraft-inspired 3D game icon, soft cel shading, rounded
-blocky shapes, bright saturated colours, a thick dark outline in the object's own darkest shade, a small white shine on
-the top-left, centred with even padding, plain transparent background, no text, no letters, no numbers, no border,
-no drop shadow, mobile-game shop icon quality.
+**Shared style (house style since 2026-10-27, after minebox.co/store; owner: "nab the icon style from here")**, put before
+every prompt, then "The item: ...":
+Hand-painted 2D cartoon mobile game item icon, slightly isometric three-quarter view, clean coloured outlines in a darker
+shade of each colour (no black lines), smooth cel shading with soft painted gradients, warm saturated colours, a few white
+four-point sparkles. ... Isolated on a plain white background, no text, no drop shadow, no border.
+Nano Banana 2.1, 1:1, 1k, thinking High. Gems are glossy faceted bright purple; containers carry a pink paw print (PetsMC).
+Done in this style: Starter Pack, 1,000 / 2,500 / 5,000 / 13,500 Gems (`assets/icons/`, sources in `docs/store-web/icon-trial/minebox-style/`).
 
 | Art name | Used for | Prompt (after the shared style) |
 |---|---|---|
@@ -28,3 +31,18 @@ no drop shadow, mobile-game shop icon quality.
 | `card_egg` | Eggs (later) | a spotted pet egg, cream with pink spots, glowing softly |
 
 Colours follow STYLE_BIBLE.md: Gems purple, ranks by tier, the brand pink.
+
+## Style trial (owner 2026-10-27): one icon, five styles
+
+Owner: "make some style versions ... similar server stores like colorgens, i want icons to look the same and cartoony
+like that. Make 5 icons of the same icon in different styles". Reference: store.colorgens.com (chunky 3D Minecraft-block
+renders on bold flat colour cards). Test icon: **2,500 Gems** (`pack_1`). Nano Banana 2.1, 1:1, 1k, plain white background
+(cut out afterwards). The owner picks one; that style then replaces the shared style above for every icon.
+
+| # | Style | Prompt |
+|---|---|---|
+| A | ColorGens voxel | A pile of seven chunky faceted purple gems built from Minecraft-style voxel blocks, isometric 3D render, crisp cube edges, bright saturated purple with lighter top faces and darker side faces, soft studio lighting, a few small sparkle pixels, game store icon, centred, plain white background, no text |
+| B | Glossy mobile-game 3D | A pile of seven big rounded cartoon purple gems, glossy candy-like 3D render, smooth bevelled facets, strong white specular highlights, soft rim light, playful mobile game shop icon in the style of Clash Royale and Brawl Stars, centred, plain white background, no text |
+| C | Bold cartoon sticker | A pile of seven chunky cartoon purple gems, flat cel shading in three tones, thick dark purple outline around every gem, a white shine stroke on each, sticker-like cartoon game icon, centred, plain white background, no text |
+| D | Soft clay toy | A pile of seven chunky purple gems that look like soft matte clay or vinyl toy pieces, rounded edges, pastel lilac and violet, gentle soft shadows, cute cosy cartoon style like Animal Crossing, centred, plain white background, no text |
+| E | HD Minecraft item | A pile of seven purple gems as a high-resolution Minecraft-style item: chunky 3D blocks with a fine pixel-art texture on every face, Minecraft lighting with a bright top and darker sides, slight bloom, in the style of a premium Minecraft server store render, centred, plain white background, no text |

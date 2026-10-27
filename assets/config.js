@@ -39,7 +39,10 @@ window.PM_CONFIG = {
   ],
   /* High-res icons (transparent PNG / WebP in assets/icons/) that replace the pixel art of the same name, for example
    * pack_0: 'gems-1000.png'. A name not listed keeps the pixel art. */
-  icons: {},
+  icons: {
+    card_gemchest: 'starter-pack.webp', pack_0: 'gems-1000.webp', pack_1: 'gems-2500.webp',
+    pack_2: 'gems-5000.webp', pack_3: 'gems-13500.webp'
+  },
   /* Footer links to the store's own pages once written (terms, privacy, refunds): {label, url} */
   links: []
 };
