@@ -3,22 +3,25 @@
 High-res icons that replace the pixel art on store.petsmc.net. Generate 1:1, then save each as a transparent PNG
 (512 px is plenty) in `assets/icons/` and list it in `icons` in `assets/config.js` under the art name in the first column.
 
-**Shared style (house style since 2026-10-27, after minebox.co/store; owner: "nab the icon style from here")**, put before
-every prompt, then "The item: ...":
-Hand-painted 2D cartoon mobile game item icon, slightly isometric three-quarter view, clean coloured outlines in a darker
-shade of each colour (no black lines), smooth cel shading with soft painted gradients, warm saturated colours, a few white
-four-point sparkles. ... Isolated on a plain white background, no text, no drop shadow, no border.
-Nano Banana 2.1, 1:1, 1k, thinking High. Gems are glossy faceted bright purple; containers carry a pink paw print (PetsMC).
-Done in this style: Starter Pack, 1,000 / 2,500 / 5,000 / 13,500 Gems (`assets/icons/`, sources in `docs/store-web/icon-trial/minebox-style/`).
+**House style (owner, 2026-10-27): low-poly pink gems.** Flat hard facets, bright magenta, a bold dark outline, no soft
+painted shading. The owner's own reference picture (a "6 GEM PACK" sheet, the top pink row) is attached in the Higgsfield
+prompt box as the ONLY reference; the picture itself is not in the repo. Keep prompts to one short line: the owner found
+long style prompts make the icons look AI-made. Pattern:
+`Same style as the top row of the reference. <the item>. White background.`
+Nano Banana 2.1, 1:1, 1k, thinking High. Cut out the white afterwards (flood fill from the corners), 512 px PNG, 320 px WebP.
+Done in this style: Starter Pack, 1,000 / 2,500 / 5,000 / 13,500 Gems (`assets/icons/`, cut-outs in
+`docs/store-web/icon-trial/r5-lowpoly-pink/`). The owner: "good enough". 1,000 Gems matches the reference best; the
+others have many small gems. Next time, ask for a few big gems, and add `gems-1000` as a second reference.
+Rejected earlier: the five-style trial below, then Minebox-style painted icons (too detailed), plain outlined (dull).
 
-| Art name | Used for | Prompt (after the shared style) |
+| Art name | Used for | Item (in the pattern above) |
 |---|---|---|
-| `card_gemchest` | Starter Pack | a small wooden treasure chest with gold trim, lid slightly open, three purple gems peeking out, a pink ribbon bow on top |
-| `pack_0` | 1,000 Gems | a small pile of three faceted purple gems |
-| `pack_1` | 2,500 Gems | a bigger pile of seven faceted purple gems with a few sparkles |
-| `pack_2` | 5,000 Gems | a bulging brown leather sack overflowing with faceted purple gems |
-| `pack_3` | 13,500 Gems | a large open treasure chest overflowing with a mountain of faceted purple gems, golden sparkles around it |
-| `card_gems` | Gems category | one big faceted purple gem, gleaming |
+| `card_gemchest` | Starter Pack | A pink gift box with pink gems |
+| `pack_0` | 1,000 Gems | Three pink gems |
+| `pack_1` | 2,500 Gems | A pile of pink gems |
+| `pack_2` | 5,000 Gems | A bag of pink gems |
+| `pack_3` | 13,500 Gems | A treasure chest overflowing with pink gems |
+| `card_gems` | Gems category | one big faceted pink gem |
 | `rank_vip` | VIP | a grey-silver shield badge with one small star |
 | `rank_vip_plus` | VIP+ | a cyan shield badge with one star and a small plus sign shape |
 | `rank_mvp` | MVP | a green shield badge with two stars and laurel leaves |
@@ -30,7 +33,7 @@ Done in this style: Starter Pack, 1,000 / 2,500 / 5,000 / 13,500 Gems (`assets/i
 | `card_cosmetics` | Cosmetics (later) | a pink top hat with a bow, for a pet |
 | `card_egg` | Eggs (later) | a spotted pet egg, cream with pink spots, glowing softly |
 
-Colours follow STYLE_BIBLE.md: Gems purple, ranks by tier, the brand pink.
+Colours: the gem packs are pink (the owner's reference); ranks by tier as in STYLE_BIBLE.md.
 
 ## Style trial (owner 2026-10-27): one icon, five styles
 
