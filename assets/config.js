@@ -37,11 +37,14 @@ window.PM_CONFIG = {
     { match: 'egg',      colour: 'green',  art: ['card_egg'], icon: 'card_egg' },
     { match: '',         colour: 'steel',  art: ['card_gemchest'], icon: 'card_gemchest' }
   ],
-  /* High-res icons (transparent PNG / WebP in assets/icons/) that replace the pixel art of the same name, for example
-   * pack_0: 'gems-1000.png'. A name not listed keeps the pixel art. */
+  /* Exact full-resolution masters used by the in-game store (textures/store-dialog/build_store_dialog.py).
+   * These replacements apply to category cards, products, detail views and the cart. */
   icons: {
-    card_gemchest: 'starter-pack.webp', pack_0: 'gems-1000.webp', pack_1: 'gems-2500.webp',
-    pack_2: 'gems-5000.webp', pack_3: 'gems-13500.webp'
+    card_gemchest: 'starter.png', card_gems: 'gems_1000.png', card_ranks: 'tab_ranks.png',
+    pack_0: 'gems_1000.png', pack_1: 'gems_2500.png', pack_2: 'gems_5000.png', pack_3: 'gems_13500.png',
+    rank_vip: 'rank_vip.png', rank_vip_plus: 'rank_vip_plus.png', rank_mvp: 'rank_mvp.png',
+    rank_mvp_plus: 'rank_mvp_plus.png', rank_mvp_plus_plus: 'rank_mvp_plus_plus.png',
+    card_pass: 'pet_pass.png', card_club: 'pet_club.png'
   },
   /* Footer links to the store's own pages once written (terms, privacy, refunds): {label, url} */
   links: []

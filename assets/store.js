@@ -429,7 +429,7 @@
     $('app').hidden = false;
     $('sample').hidden = !DEMO;
     $('year').textContent = new Date().getFullYear();
-    $('heroTitle').textContent = (C.hero && C.hero.title) || 'PetsMC Store';
+    $('heroTitle').setAttribute('aria-label', (C.hero && C.hero.title) || 'PetsMC Store');
     $('heroSub').textContent = (C.hero && C.hero.subtitle) || '';
     $('heroBedrock').textContent = C.bedrock || '';
     document.querySelectorAll('[data-ip]').forEach(function (n) { n.textContent = C.serverIp; });
