@@ -38,7 +38,7 @@
     return '<div class="pkg__price"><span class="lab lab--ink c-gold s4">' + money(base - off) + '</span>' +
       (off > 0 ? '<span class="pkg__was">' + money(base) + '</span>' : '') + sub + '</div>';
   }
-  function avatar(name) { return name && C.avatarUrl ? C.avatarUrl.replace('{name}', encodeURIComponent(name.replace(/^\./, ''))) : 'assets/img/icon.png'; }
+  function avatar(name) { return name && C.avatarUrl ? C.avatarUrl.replace('{name}', encodeURIComponent(name.replace(/^\./, ''))) : 'assets/img/icon.png?v=c50a253b'; }
   var ICON_GIFT = '<svg viewBox="0 0 24 24"><path d="M20 7h-2.2A3 3 0 0 0 12 3.5 3 3 0 0 0 6.2 7H4a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8h1a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zM15 5a1 1 0 1 1 0 2h-2a2 2 0 0 1 2-2zM9 5a2 2 0 0 1 2 2H9a1 1 0 1 1 0-2zm2 15H7v-8h4v8zm0-10H5V9h6v1zm6 10h-4v-8h4v8zm2-10h-6V9h6v1z"/></svg>';
   var ICON_X = '<svg viewBox="0 0 24 24"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>';
 
@@ -268,15 +268,15 @@
     var u = S.user;
     $('loginLabel').textContent = u ? u.username : 'Login';
     var img = $('loginAvatar');
-    img.onerror = function () { img.onerror = null; img.src = 'assets/img/icon.png'; };
-    img.src = u ? avatar(u.username) : 'assets/img/icon.png';
+    img.onerror = function () { img.onerror = null; img.src = 'assets/img/icon.png?v=c50a253b'; };
+    img.src = u ? avatar(u.username) : 'assets/img/icon.png?v=c50a253b';
   }
   function paintCart() {
     var b = S.basket, items = (b && b.packages) || [];
     $('cartCount').textContent = items.length;
     $('cartList').innerHTML = items.length ? items.map(function (x) {
       var ib = x.in_basket || {};
-      return '<div class="citem"><div class="citem__img">' + imgTag(x.image || (S.packages[x.id] ? pkgImage(S.packages[x.id]) : 'assets/img/icon.png'), '') + '</div>' +
+      return '<div class="citem"><div class="citem__img">' + imgTag(x.image || (S.packages[x.id] ? pkgImage(S.packages[x.id]) : 'assets/img/icon.png?v=c50a253b'), '') + '</div>' +
         '<div class="citem__body"><div class="citem__name">' + esc(x.name) + '</div><div class="lab lab--ink c-gold s2">' + money(ib.price) + '</div>' +
         (ib.gift_username ? '<div class="citem__gift">Gift for ' + esc(ib.gift_username) + '</div>' : '') + '</div>' +
         '<span class="citem__qty">x' + (ib.quantity || 1) + '</span>' +
@@ -304,7 +304,7 @@
   }
   function openLogin() {
     if (S.user) {
-      openModal('<h2 class="lab lab--ink c-pink s4">Log out?</h2><div class="who"><img src="' + esc(avatar(S.user.username)) + '" alt="" onerror="this.src=\'assets/img/icon.png\'">' + esc(S.user.username) + '</div>' +
+      openModal('<h2 class="lab lab--ink c-pink s4">Log out?</h2><div class="who"><img src="' + esc(avatar(S.user.username)) + '" alt="" onerror="this.src=\'assets/img/icon.png?v=c50a253b\'">' + esc(S.user.username) + '</div>' +
         '<button class="btn btn--wide c-red" type="button" data-logout><span class="lab lab--btn s3">Log out</span></button>');
       return;
     }
