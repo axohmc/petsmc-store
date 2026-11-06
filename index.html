@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="The official PetsMC store: Gems, ranks, bundles, the Pet Pass and the Pet Club. Cosmetics and comforts only.">
+<meta name="description" content="The official PetsMC store: Gems, ranks, bundles, the Gem Vault and the Pet Club. Cosmetics and comforts only.">
 <meta name="theme-color" content="#ff4da9">
 <title>PetsMC Store</title>
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
@@ -51,8 +51,6 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0; min-height: 100%;
   background-color: var(--page);
-  background-image: radial-gradient(900px 420px at 50% -120px, rgb(255 77 169 / .13), transparent 70%), var(--page-glyphs, none);
-  background-size: auto, 160px 128px;
   color: var(--ink-2); font: 700 16px/1.6 var(--f-body);
   -webkit-text-size-adjust: 100%;
 }
@@ -179,7 +177,7 @@ main { display: flex; flex-direction: column; gap: 30px; padding-block: 30px 56p
 /* ---------------------------------------------------------------- home: category tiles */
 .tiles {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px;
-  grid-template-areas: "bundles gems" "bundles ranks" "pass club";
+  grid-template-areas: "bundles gems" "bundles ranks" "vault club";
 }
 .tile {
   position: relative; display: flex; align-items: flex-start; min-height: 196px; padding: 38px 40px;
@@ -192,7 +190,6 @@ main { display: flex; flex-direction: column; gap: 30px; padding-block: 30px 56p
 .tile:active { transform: translateY(-2px); box-shadow: 0 10px 0 var(--rim); }
 .tile__text { position: relative; z-index: 3; display: flex; flex-direction: column; gap: 14px; max-width: 58%; }
 .tile__title { font-size: 52px; }
-.tile__sub { color: #fff; font: 900 19px/1.3 var(--f-body); letter-spacing: .05em; text-transform: uppercase; text-shadow: 0 2px 0 var(--deep); max-width: 15em; text-wrap: balance; }
 .tile__clip { position: absolute; inset: 0; z-index: 1; overflow: hidden; border-radius: inherit; pointer-events: none; }
 .tile .art { position: absolute; z-index: 2; right: 3%; bottom: 0; height: 100%; display: flex; align-items: flex-end; justify-content: flex-end;
   transition: transform .18s; transform-origin: 70% 85%; pointer-events: none; }
@@ -205,12 +202,12 @@ main { display: flex; flex-direction: column; gap: 30px; padding-block: 30px 56p
 .tile--ranks { grid-area: ranks; min-height: 220px; }
 .tile--ranks .art { height: 90%; top: 6%; bottom: auto; right: 3%; align-items: center; }
 .tile--ranks .tile__text { max-width: 46%; }
-.tile--pass { grid-area: pass; }
-.tile--pass .art { height: 74%; right: 4%; bottom: 13%; transform: rotate(-6deg); }
-.tile--pass:hover .art { transform: rotate(-9deg) scale(1.06); }
+.tile--vault { grid-area: vault; }      /* T-1246 (owner 2026-11-06): the Gem Vault in the Pet Pass's place */
+.tile--vault .art { height: 88%; right: 2%; bottom: 3%; }
 .tile--club { grid-area: club; }
 .tile--club .art { height: 118%; right: -4%; bottom: -24%; }
-.tile--club .tile__text, .tile--pass .tile__text, .tile--gems .tile__text { max-width: 52%; }
+.tile--club .tile__text, .tile--vault .tile__text, .tile--gems .tile__text { max-width: 52%; }
+.tile--vault .tile__title { white-space: nowrap; }   /* "GEM VAULT" on one line, as PET PASS was */
 
 /* countdown tag (white chip over the tile's corner) */
 .timer {
@@ -264,16 +261,83 @@ body.slots [data-slot]::after {
 .feat::before { content: ""; flex: 0 0 auto; width: 12px; height: 12px; margin-top: 8px; border-radius: 3px; background: var(--c); box-shadow: 0 3px 0 var(--d); }
 .feat p { color: var(--ink-2); font-size: 15.5px; line-height: 1.65; }
 .feat b { color: var(--ink); font-weight: 900; }
-.howto { display: flex; flex-direction: column; gap: 14px; }
-.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.step { display: flex; align-items: center; gap: 18px; padding: 22px; min-height: 104px; }
-.step__n { flex: 0 0 auto; display: grid; place-items: center; width: 58px; height: 58px; background: var(--face); border-bottom: 5px solid var(--rim); border-radius: var(--r-md); font-size: 32px; }
-.step p { color: var(--ink); font-size: 16px; line-height: 1.5; }
 .thanks { text-align: center; color: var(--ink-2); font-size: 16px; line-height: 1.9; }
 .thanks a { color: #1287d9; font-weight: 900; text-decoration: none; border-bottom: 2px solid currentColor; }
 .thanks img { display: inline-block; width: 26px; vertical-align: -6px; margin-right: 6px; }
 
-/* ---------------------------------------------------------------- product picker (Gems, Pet Pass, Pet Club) */
+
+/* ---------------------------------------------------------------- animated page background (owner Axoh 2026-11-06, T-1251:
+ * "add an animated background aswell"): the paw and gem glyphs drift slowly down and across, one tile every 48 s, so the
+ * loop never jumps; under them a pink and a blue light float. Off with "reduce motion" (the rule at the bottom). */
+.bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.bg__lights { position: absolute; inset: -20%;
+  background: radial-gradient(42% 34% at 30% 20%, rgb(255 77 169 / .16), transparent 70%),
+              radial-gradient(38% 30% at 72% 62%, rgb(25 184 255 / .13), transparent 70%),
+              radial-gradient(30% 26% at 20% 85%, rgb(255 204 36 / .10), transparent 70%);
+  animation: bg-lights 26s ease-in-out infinite alternate; }
+.bg__glyphs { position: absolute; top: -128px; left: -160px; right: 0; bottom: 0;
+  background-image: var(--page-glyphs, none); background-size: 160px 128px;
+  animation: bg-drift 48s linear infinite; will-change: transform; }
+@keyframes bg-drift { to { transform: translate3d(160px, 128px, 0); } }
+@keyframes bg-lights { 0% { transform: translate3d(-4%, -3%, 0) scale(1); } 50% { transform: translate3d(5%, 2%, 0) scale(1.08); } 100% { transform: translate3d(-2%, 5%, 0) scale(1.02); } }
+
+/* ---------------------------------------------------------------- the limited deal (owner 2026-11-06, T-1251: "add a limited
+ * deal at the top aswell (x% off bundles)"): one orange bar over every page, the bundles' best % off and the sale's clock */
+.deal { position: relative; overflow: hidden; display: flex; align-items: center; gap: 18px; padding: 14px 18px 14px 22px;
+  background: #ff9a1f; color: #fff; text-decoration: none; border-radius: var(--r); box-shadow: 0 6px 0 #e0700f;
+  transition: transform .12s, box-shadow .12s; }
+a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
+.deal::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / .28) 48%, transparent 56%) -150% 0 / 60% 100% no-repeat;
+  animation: deal-glint 4.5s ease-in-out infinite; }
+@keyframes deal-glint { 0%, 55% { background-position: -150% 0; } 100% { background-position: 250% 0; } }
+.deal__tag { flex: 0 0 auto; padding: 6px 10px 5px; border-radius: 8px; background: #ff4444; border-bottom: 4px solid #c92a33;
+  font: 900 13px/1 var(--f-body); letter-spacing: .1em; animation: deal-pulse 1.6s ease-in-out infinite; }
+@keyframes deal-pulse { 50% { transform: scale(1.06); } }
+.deal__pct { font: 400 34px/1 var(--f-display); letter-spacing: .02em; text-shadow: 0 3px 0 #b5520a; white-space: nowrap; }
+.deal__what { font: 400 22px/1.1 var(--f-display); letter-spacing: .03em; text-transform: uppercase; text-shadow: 0 2px 0 #b5520a; }
+.deal__end { margin-left: auto; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.deal__clock { padding: 7px 12px 5px; border-radius: 10px; background: #fff; color: var(--ink); border-bottom: 4px solid #f0c48f; font: 400 20px/1 var(--f-display); }
+.deal__go { padding: 9px 14px 7px; border-radius: 10px; background: #4ddc1e; border-bottom: 4px solid #2fb52a; font: 400 17px/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase; text-shadow: 0 2px 0 #145c3e; }
+
+/* ---------------------------------------------------------------- live leaderboards (owner 2026-11-06, T-1251: "add a live ui
+ * thing tied to the leaderboards (the main ones ...) instead of the clutter of how to buy and what pets is") */
+.lbx { display: grid; grid-template-columns: minmax(0, 250px) minmax(0, 1fr); overflow: hidden; }
+.lbx__side { display: flex; flex-direction: column; gap: 6px; padding: 22px 16px; background: var(--cell); border-right: 2px solid var(--line); }
+.lbx__h { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 6px 10px; font: 400 24px/1 var(--f-display); color: var(--ink); text-transform: uppercase; letter-spacing: .02em; }
+.live { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 3px; border-radius: 999px; background: #e9fbe3; color: #2b9a1f; font: 900 11px/1 var(--f-body); letter-spacing: .1em; }
+.live i { width: 8px; height: 8px; border-radius: 50%; background: #4ddc1e; box-shadow: 0 0 0 0 rgb(77 220 30 / .6); animation: live 1.6s infinite; }
+.live.is-sample { background: #fff4d6; color: #b97a00; } .live.is-sample i { background: #ffcc24; animation: none; }
+@keyframes live { 70% { box-shadow: 0 0 0 7px rgb(77 220 30 / 0); } 100% { box-shadow: 0 0 0 0 rgb(77 220 30 / 0); } }
+.lbx__tab { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: 0; border-radius: 12px; background: transparent; text-align: left; color: var(--ink-2); font: 900 14px/1.2 var(--f-body); letter-spacing: .03em; text-transform: uppercase; overflow: hidden; }
+.lbx__tab:hover { background: #fff; }
+.lbx__tab[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 3px 0 var(--edge); }
+.lbx__tab img { width: 32px; height: 32px; image-rendering: pixelated; }
+.lbx__tab .lbx__bar { position: absolute; left: 10px; right: 10px; bottom: 3px; height: 3px; border-radius: 3px; background: #ff4da9; transform-origin: left; transform: scaleX(0); }
+.lbx__tab[aria-pressed="true"] .lbx__bar.run { animation: lb-bar var(--lb-dur, 8s) linear forwards; }
+@keyframes lb-bar { to { transform: scaleX(1); } }
+.lbx__main { display: flex; flex-direction: column; gap: 14px; padding: 22px 26px; min-width: 0; }
+.lbx__top { display: flex; align-items: center; gap: 14px; }
+.lbx__top img { width: 48px; height: 48px; image-rendering: pixelated; }
+.lbx__name { font: 400 30px/1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
+.lbx__about { color: var(--ink-3); font-size: 14px; }
+.lbx__upd { margin-left: auto; color: var(--ink-3); font-size: 13px; white-space: nowrap; }
+.lbx__rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.lbx__rows li { display: grid; grid-template-columns: 44px 36px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 14px 8px 8px;
+  border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 12px; background: #fff; animation: lb-in .35s both; }
+.lbx__rows li:nth-child(2) { animation-delay: .05s; } .lbx__rows li:nth-child(3) { animation-delay: .1s; } .lbx__rows li:nth-child(4) { animation-delay: .15s; } .lbx__rows li:nth-child(5) { animation-delay: .2s; }
+@keyframes lb-in { from { opacity: 0; transform: translateY(8px); } }
+.lbx__rank { display: grid; place-items: center; height: 36px; border-radius: 10px; background: var(--cell); color: var(--ink-2); font: 400 20px/1 var(--f-display); }
+.lbx__rows li.p1 { border-color: #ffd75a; background: #fffaf0; } .lbx__rows li.p1 .lbx__rank { background: #ffcc24; color: #fff; text-shadow: 0 2px 0 #c98a00; box-shadow: inset 0 -4px 0 #f0951f; }
+.lbx__rows li.p2 .lbx__rank { background: #cfd5e2; color: #fff; text-shadow: 0 2px 0 #7c8497; box-shadow: inset 0 -4px 0 #a7afc0; }
+.lbx__rows li.p3 .lbx__rank { background: #f0a36b; color: #fff; text-shadow: 0 2px 0 #9a4f1c; box-shadow: inset 0 -4px 0 #d4793d; }
+.lbx__rows img.head { width: 36px; height: 36px; border-radius: 8px; image-rendering: pixelated; background: var(--cell); }
+.lbx__who { color: var(--ink); font-weight: 900; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lbx__val { font: 400 22px/1 var(--f-display); letter-spacing: .02em; }
+.lbx__note { color: var(--ink-3); font-size: 13px; }
+.v-gold { color: #e8a500; } .v-green { color: #2fb52a; } .v-red { color: #ff4444; } .v-ink { color: var(--ink); }
+
+/* ---------------------------------------------------------------- product picker (Gems, Gem Vault, Pet Club) */
 .prod { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); overflow: hidden; }
 .prod__art {
   position: relative; display: grid; place-items: center; padding: 32px; min-height: 360px;
@@ -330,6 +394,37 @@ body.slots [data-slot]::after {
 .t-purple { color: #8A4AE0; } .t-gold { color: #D97A12; } .t-green { color: #2A9E25; } .t-blue { color: #1287D9; }
 .t-pink { color: #D9328F; } .t-red { color: #D92F3A; }
 .info b { font-weight: 900; }
+/* T-1249 (owner 2026-11-06: "under pet club highlight each of the things in a respective color"): a Club line or chip in
+ * its own colour, a tint of it with its edge, the store's tiles' look */
+.info li.hl, .incl li.hl { background: color-mix(in srgb, var(--face) 11%, #fff); border: 2px solid color-mix(in srgb, var(--face) 40%, #fff);
+  border-bottom-width: 4px; border-radius: var(--r-md); color: var(--ink); }
+.info li.hl { padding: 6px 14px 6px 6px; }
+.info li.hl .info__ic { background: #fff; }
+/* the Pet Pass's tiers on the Pet Club page (T-1249, owner: "show the pet club tiers on the website"; the Pass is in the
+ * Club, one track): ten a row, the tier's number over its reward's tile (the game's 16 px icon at 2x), gold as the PASS
+ * lane; every tenth tier (a Season 1 cosmetic) framed in gold, tier 100 full gold; hover, focus or tap a tile for its
+ * reward on the line above */
+.track { padding: 22px 26px; display: flex; flex-direction: column; gap: 14px; }
+.track__top { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.track__facts { display: flex; flex-wrap: wrap; gap: 8px; }
+.fact { padding: 6px 10px 5px; border-radius: var(--r-sm); font: 900 13px/1 var(--f-body); color: var(--deep);
+  background: color-mix(in srgb, var(--face) 16%, #fff); border: 2px solid color-mix(in srgb, var(--face) 45%, #fff); }
+.track__read { min-height: 24px; color: var(--ink-2); }
+.track__read b:not([class]) { color: var(--ink); }
+.tiers { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 8px; }
+.tier { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 4px 8px; cursor: pointer;
+  background: color-mix(in srgb, var(--face) 9%, #fff); border: 2px solid color-mix(in srgb, var(--face) 30%, #fff);
+  border-bottom-width: 4px; border-radius: 10px; font: inherit; color: var(--ink-3); }
+.tier__no { font: 900 12px/1 var(--f-body); }
+.tier__ic { position: relative; display: grid; place-items: center; width: 40px; height: 40px; }
+.tier__ic img { width: 32px; height: 32px; }
+.tier__ct { position: absolute; right: -6px; bottom: -4px; padding: 2px 4px 1px; border-radius: 5px; background: #fff;
+  border: 1px solid var(--line); color: var(--ink); font: 900 10px/1 var(--f-body); }
+.tier.is-mile { border-color: var(--face); background: color-mix(in srgb, var(--face) 20%, #fff); color: var(--deep); }
+.tier.is-top { background: var(--face); border-color: var(--rim); color: var(--deep); }
+.tier:hover, .tier:focus-visible, .tier[aria-pressed="true"] { border-color: var(--rim); outline: none; color: var(--deep); }
+.tier[aria-pressed="true"] { box-shadow: 0 0 0 3px color-mix(in srgb, var(--face) 45%, #fff); }
+@media (max-width: 760px) { .tiers { grid-template-columns: repeat(5, minmax(0, 1fr)); } .track { padding: 18px 16px; } }
 .info p { color: var(--ink-2); }
 .info b:not([class]) { color: var(--ink); }
 .note { color: var(--ink-3); font-size: 14px; }
@@ -508,7 +603,6 @@ body.slots [data-slot]::after {
 .nav a:hover { transform: translateX(3px); }
 .nav a[aria-current="page"] { background: #fff; border-color: var(--face); }
 .nav__t { display: block; color: var(--ink); font: 400 18px/1.05 var(--f-display); text-transform: uppercase; letter-spacing: .03em; }
-.nav__s { display: block; color: var(--ink-3); font-size: 13px; }
 .assets { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .asset { padding: 12px 14px; background: var(--cell); border: 2px solid var(--line); border-radius: var(--r-md); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; }
 .asset__id { grid-row: span 3; align-self: start; padding: 4px 7px; border-radius: 6px; background: #ff4da9; color: #fff; font: 900 12px/1 var(--f-body); }
@@ -548,16 +642,26 @@ body.slots [data-slot]::after {
   .acct__head { width: 46px; height: 46px; } .acct__head svg { width: 24px; height: 24px; }
   .cartbtn { grid-row: 2; grid-column: 3; width: 66px; height: 66px; } .cartbtn svg { width: 30px; height: 30px; }
   .ip { font-size: 15px; gap: 8px; padding-left: 12px; } .ip__copy { padding: 6px 9px 4px; font-size: 13px; }
-  .tiles { grid-template-columns: minmax(0, 1fr); grid-template-areas: "bundles" "gems" "ranks" "pass" "club"; }
+  .tiles { grid-template-columns: minmax(0, 1fr); grid-template-areas: "bundles" "gems" "ranks" "vault" "club"; }
+  .tile--vault .art { height: 70%; right: 1%; bottom: 6%; }
   .tile { padding: 28px 24px; min-height: 170px; }
   .tile--bundles { min-height: 300px; }
   .tile__title { font-size: 38px; }
-  .tile__sub { font-size: 15px; }
-  .tile__text, .tile--ranks .tile__text, .tile--club .tile__text, .tile--pass .tile__text, .tile--gems .tile__text { max-width: 60%; }
+  .tile__text, .tile--ranks .tile__text, .tile--club .tile__text, .tile--vault .tile__text, .tile--gems .tile__text { max-width: 60%; }
   .timer { font-size: 17px; right: -4px; }
-  .intro { padding: 26px 22px; }
-  .intro__title { font-size: 28px; }
-  .feats, .steps, .incl { grid-template-columns: minmax(0, 1fr); }
+  .deal { flex-wrap: wrap; gap: 10px 14px; padding: 14px 16px; }
+  .deal__pct { font-size: 28px; } .deal__what { font-size: 18px; }
+  .deal__end { margin-left: 0; width: 100%; justify-content: space-between; }
+  .lbx { grid-template-columns: minmax(0, 1fr); }
+  .lbx__side { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 2px solid var(--line); padding: 16px; }
+  .lbx__h { width: 100%; }
+  .lbx__tab { width: auto; flex: 1 1 calc(50% - 6px); font-size: 12px; }
+  .lbx__main { padding: 18px 14px; }
+  .lbx__name { font-size: 24px; }
+  .lbx__upd { display: none; }
+  .lbx__rows li { grid-template-columns: 36px 30px minmax(0, 1fr) auto; gap: 10px; }
+  .lbx__rows img.head { width: 30px; height: 30px; }
+  .feats, .incl { grid-template-columns: minmax(0, 1fr); }
   .prod { grid-template-columns: minmax(0, 1fr); }
   .prod__art { min-height: 260px; border-right: 0; border-bottom: 2px solid var(--line); }
   .prod__art .art { max-width: 220px; }
@@ -602,6 +706,8 @@ body.slots [data-slot]::after {
     <p class="gate__ip">Meanwhile, come play: <b>play.petsmc.net</b></p>
   </form>
 </div>
+<div class="bg" aria-hidden="true"><div class="bg__lights"></div><div class="bg__glyphs"></div></div>
+
 <div class="strip"><b>SAMPLE STORE:</b> proposed packs and prices, nothing can be bought yet.</div>
 
 <header class="top wrap">
@@ -632,6 +738,7 @@ body.slots [data-slot]::after {
       <div>
         <h2 class="foot__brand"><span class="art"><img src="img/paw.webp" alt=""></span><span><span class="p">Pets</span><span class="m">MC</span></span></h2>
         <p>Welcome to the official PetsMC store. Every purchase helps keep the server online and pays for new pets and updates. Thank you for the support!</p>
+        <p>Everything in the store is a cosmetic or a comfort. Nothing you buy makes your pets stronger.</p>
       </div>
       <div class="foot__support">
         <h2 class="foot__title">Support <span class="sq" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 3h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H8l-5 4V4a1 1 0 0 1 1-1Z"/></svg></span></h2>
@@ -705,7 +812,7 @@ body.slots [data-slot]::after {
   const ASSETS = [
     { id: 'A1', s: 'need', n: 'Founder pet hat icon', d: 'The Starter Pack row lists the Founder pet hat; it needs a small picture like the other items.', z: 'Transparent PNG, 256 x 256' },
     { id: 'A2', s: 'need', n: 'Link preview image', d: 'What Discord, X and iMessage show when someone pastes store.petsmc.net. Not on the page itself.', z: 'PNG or JPG, 1200 x 630' },
-    { id: 'H', s: 'have', n: 'Already have (used as is)', d: 'The store logo and the paw (the owner\'s, 2026-11-05: header, browser tab, footer, empty cart), every store render in the pixel look (gem packs, Starter and Club gifts, rank tags, the three rank bundles, Pet Pass, Pet Club, Club tag), the account\'s person icon, and the menus\' glyph patterns (the page draws them itself).', z: 'textures/branding/, docs/store-renders-20261027/renders/' }
+    { id: 'H', s: 'have', n: 'Already have (used as is)', d: 'The store logo and the paw (the owner\'s, 2026-11-05: header, browser tab, footer, empty cart), every store render in the pixel look (gem packs, Starter and Club gifts, rank tags, the three rank bundles, Pet Pass, Pet Club, Club tag, the Gem Vault), the account\'s person icon, and the menus\' glyph patterns (the page draws them itself).', z: 'textures/branding/, docs/store-renders-20261027/renders/' }
   ];
 
   /* ------------------------------------------------------------ the sample catalogue (proposed prices from docs/design/monetization.md; the bundles are samples) */
@@ -714,8 +821,9 @@ body.slots [data-slot]::after {
     { key: 'bundles', name: 'Bundles', sub: 'The best perks all in one', c: 'orange', tile: 'bundles', g: 'gift', art: { src: 'img/starter.webp', slot: 'have' }, ends: '2026-11-30T08:00:00Z' },
     { key: 'gems', name: 'Gems', sub: 'Store currency', c: 'teal', tile: 'gems', g: 'gem', art: { src: 'img/gems_2500.webp', slot: 'have' } },
     { key: 'ranks', name: 'Ranks', sub: 'Show off with a shiny tag!', c: 'blue', tile: 'ranks', g: 'crown', art: { src: 'img/ranks.webp', slot: 'have' } },
-    { key: 'pass', name: 'Pet Pass', sub: '50 tiers every season', c: 'gold', tile: 'pass', g: 'star', art: { src: 'img/pet_pass.webp', slot: 'have' } },
-    { key: 'club', name: 'Pet Club', sub: 'Gems every month', c: 'pink', tile: 'club', g: 'paw', art: { src: 'img/pet_club.webp', slot: 'have' } }
+    // T-1246 (owner Axoh 2026-11-06: "replace the pet pass with gem vault since we dont need it since its under pet club now"; the Pass is in the Club, T-1245)
+    { key: 'vault', name: 'Gem Vault', sub: '2,500 Gems in 2 weeks of play', c: 'gold', tile: 'vault', g: 'gem', art: { src: 'img/gem_vault.webp', slot: 'have' } },
+    { key: 'club', name: 'Pet Club', sub: 'Pet Pass + Gems every month', c: 'pink', tile: 'club', g: 'paw', art: { src: 'img/pet_club.webp', slot: 'have' } }
   ];
   const CAT = Object.fromEntries(CATS.map((c) => [c.key, c]));
 
@@ -726,8 +834,8 @@ body.slots [data-slot]::after {
     { id: 'g13500', c: 'orange', name: '13,500 Gems', n: 13500, price: 79.99, src: 'img/gems_13500.webp', flag: 'Popular' },
     { id: 'g28000', c: 'pink', name: '28,000 Gems', n: 28000, price: 139.99, src: 'img/gems_28000.webp', flag: 'Best value' }
   ];
-  const PASS = [{ id: 'pass', name: 'Premium Track', price: 9.99, src: 'img/pet_pass.webp' }];
-  const CLUB = [{ id: 'club', name: 'Pet Club', price: 4.99, sub: true, src: 'img/pet_club.webp' }];
+  const VAULT = [{ id: 'vault', name: 'Gem Vault', price: 4.99, src: 'img/gem_vault.webp' }];
+  const CLUB = [{ id: 'club', name: 'Pet Club', price: 9.99, sub: true, src: 'img/pet_club.webp' }];   // $9.99 with the Pet Pass in it (owner 2026-11-06, T-1245)
   const RANKS = [
     { id: 'vip', name: 'VIP', kind: 'Lifetime', price: 4.99, per: '/ lifetime', src: 'img/rank_vip.webp' },
     { id: 'vipp', name: 'VIP+', kind: 'Lifetime', price: 9.99, per: '/ lifetime', src: 'img/rank_vip_plus.webp' },
@@ -746,7 +854,7 @@ body.slots [data-slot]::after {
     ['VIP lounge at spawn', Y, Y, Y, Y, Y]
   ];
   const ITEM = {}; // id -> {name, price, img|null, sub}
-  [...GEMS, ...PASS, ...CLUB].forEach((o) => { ITEM[o.id] = { name: o.id === 'pass' ? 'Pet Pass: Premium Track' : o.name, price: o.price, img: o.src || null, sub: !!o.sub }; });
+  [...GEMS, ...VAULT, ...CLUB].forEach((o) => { ITEM[o.id] = { name: o.id === 'vault' ? 'Gem Vault: break it open' : o.name, price: o.price, img: o.src || null, sub: !!o.sub }; });
   RANKS.forEach((r) => { if (!ITEM[r.id]) ITEM[r.id] = { name: r.name + ' Rank', price: r.price, img: r.src, sub: !!r.sub }; });
 
   const BUNDLES = [
@@ -759,8 +867,8 @@ body.slots [data-slot]::after {
       incl: [['img/rank_mvp.webp', 'MVP Rank'], ['img/gems_2500.webp', '2,500 Gems']] },
     { id: 'b-mvppp', group: 'rank', name: 'MVP++ Bundle', chip: 'Bundle', c: 'teal', g: 'crown', src: 'img/bundle_mvp_plus_plus.webp', price: 69.99, was: 94.98, sale: true,
       incl: [['img/rank_mvp_plus_plus.webp', 'MVP++ Rank'], ['img/gems_5000.webp', '5,000 Gems']] },
-    { id: 'b-club', group: 'month', name: 'Pet Club', chip: 'Monthly pass', c: 'pink', g: 'paw', src: 'img/pet_club.webp', lead: 'Every month while you are subscribed:', sub: true, price: 4.99,
-      incl: [['img/gems_1000.webp', '600 Gems'], ['img/club_gift.webp', 'A Club-only cosmetic'], ['img/club_tag.webp', 'Club badge and name colour']],
+    { id: 'b-club', group: 'month', name: 'Pet Club', chip: 'Monthly pass', c: 'pink', g: 'paw', src: 'img/pet_club.webp', lead: 'Every month while you are subscribed:', sub: true, price: 9.99,
+      incl: [['img/pet_pass.webp', 'The Pet Pass, every season', 'gold'], ['img/gems_1000.webp', '600 Gems', 'purple'], ['img/club_gift.webp', 'A Club-only cosmetic', 'pink'], ['img/club_tag.webp', 'Club badge and name colour', 'blue']],
       fine: 'Renews every month. Cancel any time.' }
   ];
   BUNDLES.forEach((b) => { ITEM[b.id] = { name: b.name, price: b.price, img: b.src, sub: !!b.sub }; });
@@ -807,7 +915,7 @@ body.slots [data-slot]::after {
   /* ------------------------------------------------------------ state */
   const store = { get(k) { try { return JSON.parse(localStorage.getItem('pm-prev-' + k)); } catch (e) { return null; } },
                   set(k, v) { try { localStorage.setItem('pm-prev-' + k, JSON.stringify(v)); } catch (e) { /* private window */ } } };
-  let cart = store.get('cart') || [];
+  let cart = (store.get('cart') || []).filter((l) => ITEM[l.id]);   // a line for something no longer sold (the Pet Pass) drops
   let user = store.get('user');
   let edition = 'java';
   let pending = null; // an item waiting for login
@@ -817,7 +925,6 @@ body.slots [data-slot]::after {
     cart: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5.2 4H2V2h4.8l.9 2H21a1 1 0 0 1 .9 1.4l-3.6 7A2 2 0 0 1 16.5 13.5H8.1l-1 1.8V16H19v2H5v-3.2l1.6-2.9L5.2 4Z"/></svg>',
     home: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 11h3v10h5v-6h4v6h5V11h3L12 3Z"/></svg>',
     list: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h3v3H3V5Zm5 0h13v3H8V5Zm-5 5.5h3v3H3v-3Zm5 0h13v3H8v-3ZM3 16h3v3H3v-3Zm5 0h13v3H8v-3Z"/></svg>',
-    sub: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6a6 6 0 0 1 5.7 7.9l1.5 1.5A8 8 0 0 0 12 4Zm0 14a6 6 0 0 1-5.7-7.9L4.8 8.6A8 8 0 0 0 12 20v3l4-4-4-4v3Z"/></svg>',
     yes: '<svg class="yes" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3"><path d="M2.5 8.5 6.5 12l7-8"/></svg>',
     no: '<svg class="no" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M4 4l8 8M12 4l-8 8"/></svg>'
   };
@@ -835,33 +942,122 @@ body.slots [data-slot]::after {
   }
   const timerHTML = (iso) => `<span class="timer num" data-ends="${iso}">${left(iso)}</span>`;
 
+
+  /* ------------------------------------------------------------ the limited deal (T-1251): the bundles' best % off, the sale's clock */
+  const DEAL = { ends: '2026-11-30T08:00:00Z', what: 'bundles' };   // the same end as the Bundles tile's timer
+  function dealHTML(key) {
+    const pct = Math.max(...BUNDLES.filter((b) => b.was).map((b) => Math.round((1 - b.price / b.was) * 100)));
+    if (!isFinite(pct) || new Date(DEAL.ends) <= Date.now()) return '';
+    const tag = key === 'bundles' ? 'div' : 'a';
+    return `<${tag} class="deal"${tag === 'a' ? ' href="#bundles"' : ''} aria-label="Limited deal: up to ${pct}% off bundles">
+        <span class="deal__tag">LIMITED DEAL</span>
+        <span class="deal__pct num">UP TO ${pct}% OFF</span><span class="deal__what">${esc(DEAL.what)}</span>
+        <span class="deal__end"><span class="deal__clock num" data-ends="${DEAL.ends}">${left(DEAL.ends)}</span>${tag === 'a' ? '<span class="deal__go">Shop now</span>' : ''}</span>
+      </${tag}>`;
+  }
+
+  /* ------------------------------------------------------------ live leaderboards (T-1251): the main boards only, from the
+   * game's PetsLeaderboards (boards.yml ids, names, colours and /lb icons). LB_URL is a JSON file the server exports:
+   *   { "updated": "2026-11-06T20:00:00Z", "boards": { "richest": [ { "name": "Steve", "value": 4812000 }, ... ], ... } }
+   * Empty, or unreachable: the sample below, marked SAMPLE. Read again every minute; the board turns every 8 s like the wall. */
+  const LB_URL = '';
+  const LB_BOARDS = [
+    { id: 'trainer-level', name: 'Trainer Level', about: 'The highest Trainer levels', fmt: 'level', v: 'gold' },
+    { id: 'richest', name: 'Richest', about: 'Money in the bank', fmt: 'money', v: 'green' },
+    { id: 'most-kills', name: 'Most Kills', about: 'Mobs defeated in the levels', fmt: 'number', v: 'red' },
+    { id: 'top-pet-level', name: 'Top Pet Level', about: 'The highest level pets', fmt: 'level', v: 'gold' },
+    { id: 'neon-pets', name: 'Neon Pets', about: 'Neon pets made', fmt: 'number', v: 'ink' },
+    { id: 'best-wave', name: 'Best Wave', about: 'The furthest wave reached', fmt: 'number', v: 'ink' }
+  ];
+  const LB_SAMPLE = {
+    'trainer-level': [['Axoh', 87], ['PixelPaws', 81], ['Bara', 76], ['MintyFox', 72], ['Okane', 69]],
+    'richest': [['PixelPaws', 48120000], ['Axoh', 31900000], ['Sprinkle', 22450000], ['MintyFox', 9870000], ['Jake', 7310000]],
+    'most-kills': [['Bara', 182430], ['NovaBlade', 141209], ['Axoh', 98114], ['PixelPaws', 76540], ['Okane', 51002]],
+    'top-pet-level': [['MintyFox', 100], ['Axoh', 98], ['Sprinkle', 94], ['Bara', 91], ['Jake', 88]],
+    'neon-pets': [['Sprinkle', 214], ['PixelPaws', 187], ['MintyFox', 140], ['Axoh', 133], ['NovaBlade', 97]],
+    'best-wave': [['NovaBlade', 62], ['Bara', 58], ['Axoh', 55], ['Okane', 49], ['PixelPaws', 47]]
+  };
+  const lb = { data: null, live: false, updated: null, i: 0, hold: 0, timer: 0 };
+  const LB_TURN = 8000, LB_HOLD = 60000;   // the spawn wall's 8 s and 60 s
+  function compact(n) {
+    const u = [[1e9, 'B'], [1e6, 'M'], [1e3, 'K']].find(([d]) => n >= d);
+    if (!u) return n.toLocaleString('en-US');
+    const x = n / u[0];
+    return (x < 100 ? Math.floor(x * 10) / 10 : Math.floor(x)) + u[1];   // rounds down like the game: 1.2K
+  }
+  const lbVal = (b, n) => b.fmt === 'level' ? `LV ${n}` : b.fmt === 'money' ? `$${compact(n)}` : compact(n);
+  function lbRows(b) {
+    const raw = lb.data && lb.data[b.id];
+    return (raw || []).slice(0, 5).map((r) => Array.isArray(r) ? { name: r[0], value: r[1] } : r);
+  }
+  function lbAgo() {
+    if (!lb.updated) return '';
+    const m = Math.max(0, Math.round((Date.now() - lb.updated) / 6e4));
+    return m < 1 ? 'Updated just now' : m < 60 ? `Updated ${m}m ago` : `Updated ${Math.floor(m / 60)}h ago`;
+  }
+  function lbMain() {
+    const b = LB_BOARDS[lb.i], rows = lbRows(b);
+    const list = rows.length ? rows.map((r, n) => `
+        <li class="${n < 3 ? 'p' + (n + 1) : ''}"><span class="lbx__rank num">${n + 1}</span>
+          <img class="head" src="https://mc-heads.net/avatar/${encodeURIComponent(r.name)}/36" alt="" loading="lazy">
+          <span class="lbx__who">${esc(r.name)}</span><span class="lbx__val num v-${b.v}">${esc(lbVal(b, +r.value))}</span></li>`).join('')
+      : '<li><span class="lbx__who">Nobody on this board yet. Be the first!</span></li>';
+    return `
+      <div class="lbx__top"><img src="img/lb/${b.id}.png" alt=""><div><h3 class="lbx__name v-${b.v === 'ink' ? 'ink' : b.v}">${esc(b.name)}</h3><p class="lbx__about">${esc(b.about)}</p></div><span class="lbx__upd">${lbAgo()}</span></div>
+      <ol class="lbx__rows">${list}</ol>
+      <p class="lbx__note">${lb.live ? 'The same boards as /lb in game, all time.' : 'Sample names and numbers: the live boards come from the game once the server shares them.'} Play on <b class="t-blue">play.petsmc.net</b> to get on them.</p>`;
+  }
+  function lbHTML() {
+    const tabs = LB_BOARDS.map((b, i) => `<button class="lbx__tab" type="button" data-lb="${i}" aria-pressed="${i === lb.i}"><img src="img/lb/${b.id}.png" alt="">${esc(b.name)}<span class="lbx__bar"></span></button>`).join('');
+    return `
+      <section class="lbx panel" aria-labelledby="lbx-h">
+        <div class="lbx__side"><h2 class="lbx__h plain" id="lbx-h">Top players <span class="live${lb.live ? '' : ' is-sample'}"><i></i>${lb.live ? 'LIVE' : 'SAMPLE'}</span></h2>${tabs}</div>
+        <div class="lbx__main" aria-live="polite">${lbMain()}</div>
+      </section>`;
+  }
+  function lbShow(i, byHand) {
+    const box = $('.lbx'); if (!box) return;
+    lb.i = (i + LB_BOARDS.length) % LB_BOARDS.length;
+    if (byHand) lb.hold = Date.now() + LB_HOLD;
+    box.querySelectorAll('[data-lb]').forEach((t) => {
+      const on = +t.dataset.lb === lb.i; t.setAttribute('aria-pressed', on);
+      const bar = t.querySelector('.lbx__bar'); bar.classList.remove('run'); void bar.offsetWidth;
+      if (on && !byHand) bar.classList.add('run');
+    });
+    box.querySelector('.lbx__main').innerHTML = lbMain();
+  }
+  function lbTick() {
+    clearTimeout(lb.timer);
+    lb.timer = setTimeout(() => { if ($('.lbx') && Date.now() >= lb.hold && !document.hidden) lbShow(lb.i + 1); lbTick(); }, LB_TURN);
+  }
+  async function lbLoad() {
+    if (LB_URL) {
+      try {
+        const r = await fetch(LB_URL, { cache: 'no-store' });
+        if (!r.ok) throw new Error(r.status);
+        const j = await r.json();
+        lb.data = j.boards || {}; lb.updated = j.updated ? new Date(j.updated).getTime() : Date.now(); lb.live = true;
+      } catch (e) { if (!lb.live) { lb.data = LB_SAMPLE; lb.updated = null; } }
+    } else { lb.data = LB_SAMPLE; }
+    const box = $('.lbx');
+    if (box) { box.querySelector('.live').outerHTML = `<span class="live${lb.live ? '' : ' is-sample'}"><i></i>${lb.live ? 'LIVE' : 'SAMPLE'}</span>`; box.querySelector('.lbx__main').innerHTML = lbMain(); }
+  }
+  lb.data = LB_SAMPLE;
+  document.addEventListener('click', (e) => { const t = e.target.closest && e.target.closest('[data-lb]'); if (t) lbShow(+t.dataset.lb, true); });
+
   /* ------------------------------------------------------------ views */
   function home() {
     const tiles = CATS.map((c) => `
       <a class="tile tile--${c.tile} c-${c.c}" href="#${c.key}" data-glyph="${c.g}">
         ${c.ends ? timerHTML(c.ends) : ''}
-        <span class="tile__text"><span class="tile__title lab">${esc(c.name)}</span><span class="tile__sub">${esc(c.sub)}</span></span>
+        <span class="tile__text"><span class="tile__title lab">${esc(c.name)}</span></span>
         ${c.tile === 'gems' || c.tile === 'club' ? `<span class="tile__clip">${artHTML(c.art)}</span>` : artHTML(c.art)}
       </a>`).join('');
-    // no "How the server works" list (owner 2026-11-05: "get rid of how the server works section"); its fairness line,
-    // one of the texts the store must show (docs/design/monetization.md section 6), moved into the welcome
+    // no welcome and no How to buy under the offers (owner 2026-11-06, T-1251: "instead of the clutter of how to buy and what
+    // pets is"): the live boards there; the fairness line (monetization.md section 6) is in the footer
     return `
       <section class="tiles" aria-label="Categories">${tiles}</section>
-      <section class="intro panel">
-        <div class="intro__body">
-          <h1 class="intro__title">Welcome to <span>PetsMC</span></h1>
-          <p class="intro__text">PetsMC is a pet server. Hatch eggs, raise your pets from Newborn to Full Grown, merge them into Neons and take them into the Levels to fight, earn money and level up together.</p>
-          <p class="intro__text">Everything in the store is a cosmetic or a comfort. Nothing you buy makes your pets stronger.</p>
-        </div>
-      </section>
-      <section class="howto">
-        <h2 class="ruled plain">How to buy</h2>
-        <ol class="steps">
-          <li class="step panel"><span class="step__n lab c-blue">1</span><p>Log in with your Minecraft username, Java or Bedrock.</p></li>
-          <li class="step panel"><span class="step__n lab c-pink">2</span><p>Pick a category and add what you want to your cart.</p></li>
-          <li class="step panel"><span class="step__n lab c-gold">3</span><p>Check out. Your items arrive in game shortly after you pay.</p></li>
-        </ol>
-      </section>
+      ${lbHTML()}
       <p class="thanks">Every purchase helps keep PetsMC online and pays for new pets and updates.<br>
         <img src="img/gems_1000.webp" alt="">Thank you for supporting the server! Need help? Questions about a purchase or a rank?<br>
         Open a ticket on our <a href="#" class="js-discord">Discord</a>.</p>`;
@@ -869,23 +1065,24 @@ body.slots [data-slot]::after {
 
   const pageNav = () => `<div class="pagenav"><a class="btn btn--ghost" href="#">${IC.home}<span>Back to store</span></a><button class="btn c-blue" type="button" data-open="cats">${IC.list}<span>Browse categories</span></button></div>`;
 
-  // product picker: gems, pass, club
+  // product picker: gems, the Gem Vault, club
   const PICK = {
     gems: { opts: GEMS, qty: false, info: (o) => ({ h: 'Gems', s: o.name, c: o.c, lines: [
       ['gem_purple', `Adds <b class="t-purple">${o.n.toLocaleString('en-US')} Gems</b> to your balance as soon as you pay.`],
-      ['stall_orange', 'Spend them in the <b class="t-blue">Gems Store</b> in game (<b class="t-blue">/store</b>): cosmetics, Ride and Fly, the Pet Pass.'],
+      ['stall_orange', 'Spend them in the <b class="t-blue">Gems Store</b> in game (<b class="t-blue">/store</b>): cosmetics, Ride and Fly.'],
       ['check_green', 'Gems <b class="t-green">never expire</b>.'],
       ['house_blue', 'Logged out? They will be <b class="t-green">waiting</b> the next time you join.']],
       note: 'Gems are a virtual currency for cosmetics. They have no real-world value, cannot be cashed out or moved to other servers, and are not Minecoins.' }) },
-    pass: { opts: PASS, qty: false, info: () => ({ h: 'Pet Pass', s: 'Premium Track', c: 'gold', lines: [
-      ['pass_gold', 'Unlocks the premium rewards of this season: <b class="t-gold">50 tiers</b> of cosmetics.'],
-      ['gem_purple', 'Earn <b class="t-purple">450 Gems</b> back as you climb.'],
-      ['star_gold', 'Tiers come from <b class="t-blue">quests</b> only. Nobody can buy a tier skip.'],
-      ['check_green', 'A season lasts <b class="t-gold">six weeks</b>.']] }) },
-    club: { opts: CLUB, qty: false, info: () => ({ h: 'Pet Club', s: 'Monthly', c: 'pink', lines: [
+    vault: { opts: VAULT, qty: false, info: () => ({ h: 'Gem Vault', s: 'Up to 2,500 Gems', c: 'gold', lines: [
+      ['gem_purple', 'Your vault holds up to <b class="t-purple">2,500 Gems</b>: <b class="t-green">five times</b> the Gems $4.99 buys.'],
+      ['check_green', 'It fills <b class="t-purple">+180 Gems</b> every day you play, so it is full in <b class="t-gold">14 days</b>.'],
+      ['star_gold', 'Buying it breaks it open: every Gem in it goes to your balance, and it starts filling again.'],
+      ['paw_pink', '<b class="t-pink">Pet Club</b> members open it <b class="t-green">free</b> at the end of every month.']] }) },
+    club: { opts: CLUB, qty: false, hl: true, track: true, info: () => ({ h: 'Pet Club', s: 'Monthly', c: 'pink', lines: [
+      ['pass_gold', 'The <b class="t-gold">Pet Pass</b> every season: all 100 tiers, shown below. It comes only with the Club.'],
       ['gem_purple', '<b class="t-purple">600 Gems</b> every month.'],
       ['equip_pink', 'One <b class="t-pink">Club-only cosmetic</b> every month.'],
-      ['paw_pink', 'The <b class="t-pink">Club badge</b> and name colour.'],
+      ['paw_blue', 'The <b class="t-blue">Club badge</b> and name colour.'],
       ['check_green', 'Renews every month. <b class="t-green">Cancel any time</b> in your Tebex account.']] }) }
   };
   const pickState = {};
@@ -906,20 +1103,45 @@ body.slots [data-slot]::after {
         <div class="prod__main">
           <div class="prod__head"><h1 class="prod__title">${esc(cat.name)}</h1>${priceHTML(total, o.sub ? 'USD / month' : 'USD')}</div>
           ${opts}${qty}
-          <button class="btn btn--block btn--xl c-green" type="button" data-add="${o.id}" data-qty="${P.qty ? st.q : 1}">${o.sub ? IC.sub : IC.cart}<span>${label}</span><small>${P.qty ? st.q + 'x ' : ''}${esc(o.name)}</small></button>
+          <button class="btn btn--block btn--xl c-green" type="button" data-add="${o.id}" data-qty="${P.qty ? st.q : 1}">${IC.cart}<span>${label}</span></button>
         </div>
       </section>
       <section class="info panel">
         <h2 class="info__h plain">${esc(info.h)} <span class="c-${info.c || cat.c}">${esc(info.s)}</span></h2>
-        <ul>${info.lines.map(([ic, l]) => `<li><span class="info__ic c-${ic.split('_')[1]}"><img class="px" src="img/icons/${ic}.png" alt=""></span><span>${l}</span></li>`).join('')}</ul>
+        <ul>${info.lines.map(([ic, l]) => `<li${P.hl ? ` class="hl c-${ic.split('_')[1]}"` : ''}><span class="info__ic c-${ic.split('_')[1]}"><img class="px" src="img/icons/${ic}.png" alt=""></span><span>${l}</span></li>`).join('')}</ul>
         ${info.note ? `<p class="note">${info.note}</p>` : ''}
       </section>
+      ${P.track ? trackHTML() : ''}
       ${pageNav()}`;
   }
 
+  /* the Pet Pass's tiers (T-1249): TRACK is written by make_pass_track.py from the Season 1 plan */
+  /*TRACK:start*/ const TRACK = {"season":"Season 1","gemsBack":1500,"tiers":[[1,"Frostpaw Hood",null,"","Season 1 only. Hat.","Cosmetics"],[2,"XP Candy Bag","img/pass/xp_bag.png","","Feed it to a pet for Pet XP.","XP and potions"],[3,"2x Pet XP Potion","img/pass/xp_potion.png","","Your pets earn twice the Pet XP for 30m.","XP and potions"],[4,"$5,000","img/pass/items-money_2_bills.png","$5K","Money for eggs, the market and your island.","Money"],[5,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[6,"1.5x Money Booster","img/pass/money_boost.png","","1.5x the money you earn for 30m.","XP and potions"],[7,"XP Candy x5","img/pass/xp_candy.png","x5","Feed it to a pet for Pet XP.","XP and potions"],[8,"2x Pet Speed Potion","img/pass/speed_pot.png","","Your pets move twice as fast for 30m.","XP and potions"],[9,"Booster Cookie","img/pass/cookie.png","","Every island effect on you for 30m.","XP and potions"],[10,"Snowglare Goggles",null,"","Season 1 only. Goggles.","Cosmetics"],[11,"$10,000","img/pass/items-money_3_stack.png","$10K","Money for eggs, the market and your island.","Money"],[12,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[13,"Standard Cosmetic Key","img/pass/std_cos_key.png","","Opens the Standard Cosmetic Crate once.","Crate keys"],[14,"+10% Mutation Potion","img/pass/mut10.png","","+10% mutation chance for 10m.","XP and potions"],[15,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[16,"XP Candy Jar","img/pass/xp_jar.png","","Feed it to a pet for Pet XP.","XP and potions"],[17,"+20% Mutation Potion","img/pass/mut20.png","","+20% mutation chance for 7m.","XP and potions"],[18,"XP Candy Bag","img/pass/xp_bag.png","","Feed it to a pet for Pet XP.","XP and potions"],[19,"2x Pet XP Potion","img/pass/xp_potion.png","","Your pets earn twice the Pet XP for 30m.","XP and potions"],[20,"Frostbite Name Tag",null,"","Season 1 only. Name tag, animated.","Cosmetics"],[21,"$5,000","img/pass/items-money_2_bills.png","$5K","Money for eggs, the market and your island.","Money"],[22,"1.5x Money Booster","img/pass/money_boost.png","","1.5x the money you earn for 30m.","XP and potions"],[23,"XP Candy x5","img/pass/xp_candy.png","x5","Feed it to a pet for Pet XP.","XP and potions"],[24,"2x Pet Speed Potion","img/pass/speed_pot.png","","Your pets move twice as fast for 30m.","XP and potions"],[25,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[26,"Booster Cookie","img/pass/cookie.png","","Every island effect on you for 30m.","XP and potions"],[27,"Fly Potion","img/pass/fly.png","","Makes one pet fly for good.","Pets"],[28,"$10,000","img/pass/items-money_3_stack.png","$10K","Money for eggs, the market and your island.","Money"],[29,"+10% Mutation Potion","img/pass/mut10.png","","+10% mutation chance for 10m.","XP and potions"],[30,"Frostpaw Pack",null,"","Season 1 only. Backpack.","Cosmetics"],[31,"XP Candy Jar","img/pass/xp_jar.png","","Feed it to a pet for Pet XP.","XP and potions"],[32,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[33,"+20% Mutation Potion","img/pass/mut20.png","","+20% mutation chance for 7m.","XP and potions"],[34,"XP Candy Bag","img/pass/xp_bag.png","","Feed it to a pet for Pet XP.","XP and potions"],[35,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[36,"2x Pet XP Potion","img/pass/xp_potion.png","","Your pets earn twice the Pet XP for 30m.","XP and potions"],[37,"$5,000","img/pass/items-money_2_bills.png","$5K","Money for eggs, the market and your island.","Money"],[38,"Rare Key","img/pass/rare_key.png","","Opens the Rare Crate once.","Crate keys"],[39,"1.5x Money Booster","img/pass/money_boost.png","","1.5x the money you earn for 30m.","XP and potions"],[40,"Icicle Lantern",null,"","Season 1 only. Hand.","Cosmetics"],[41,"XP Candy x5","img/pass/xp_candy.png","x5","Feed it to a pet for Pet XP.","XP and potions"],[42,"2x Pet Speed Potion","img/pass/speed_pot.png","","Your pets move twice as fast for 30m.","XP and potions"],[43,"Booster Cookie","img/pass/cookie.png","","Every island effect on you for 30m.","XP and potions"],[44,"$10,000","img/pass/items-money_3_stack.png","$10K","Money for eggs, the market and your island.","Money"],[45,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[46,"+10% Mutation Potion","img/pass/mut10.png","","+10% mutation chance for 10m.","XP and potions"],[47,"Legendary Cosmetic Key","img/pass/leg_cos_key.png","","Opens the Legendary Cosmetic Crate once.","Crate keys"],[48,"XP Candy Jar","img/pass/xp_jar.png","","Feed it to a pet for Pet XP.","XP and potions"],[49,"+20% Mutation Potion","img/pass/mut20.png","","+20% mutation chance for 7m.","XP and potions"],[50,"Snow Tube",null,"","Season 1 only. Hip.","Cosmetics"],[51,"XP Candy Bag","img/pass/xp_bag.png","","Feed it to a pet for Pet XP.","XP and potions"],[52,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[53,"2x Pet XP Potion","img/pass/xp_potion.png","","Your pets earn twice the Pet XP for 30m.","XP and potions"],[54,"$5,000","img/pass/items-money_2_bills.png","$5K","Money for eggs, the market and your island.","Money"],[55,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[56,"1.5x Money Booster","img/pass/money_boost.png","","1.5x the money you earn for 30m.","XP and potions"],[57,"XP Candy x5","img/pass/xp_candy.png","x5","Feed it to a pet for Pet XP.","XP and potions"],[58,"$50,000","img/pass/items-money_5_vault.png","$50K","Money for eggs, the market and your island.","Money"],[59,"2x Pet Speed Potion","img/pass/speed_pot.png","","Your pets move twice as fast for 30m.","XP and potions"],[60,"Snowdrift Chat Colour",null,"","Season 1 only. Chat colour, animated.","Cosmetics"],[61,"Booster Cookie","img/pass/cookie.png","","Every island effect on you for 30m.","XP and potions"],[62,"$10,000","img/pass/items-money_3_stack.png","$10K","Money for eggs, the market and your island.","Money"],[63,"+10% Mutation Potion","img/pass/mut10.png","","+10% mutation chance for 10m.","XP and potions"],[64,"XP Candy Jar","img/pass/xp_jar.png","","Feed it to a pet for Pet XP.","XP and potions"],[65,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[66,"+20% Mutation Potion","img/pass/mut20.png","","+20% mutation chance for 7m.","XP and potions"],[67,"Legendary Key","img/pass/leg_key.png","","Opens the Legendary Crate once.","Crate keys"],[68,"XP Candy Bag","img/pass/xp_bag.png","","Feed it to a pet for Pet XP.","XP and potions"],[69,"2x Pet XP Potion","img/pass/xp_potion.png","","Your pets earn twice the Pet XP for 30m.","XP and potions"],[70,"Aurora Hood",null,"","Season 1 only. Hat.","Cosmetics"],[71,"$5,000","img/pass/items-money_2_bills.png","$5K","Money for eggs, the market and your island.","Money"],[72,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[73,"1.5x Money Booster","img/pass/money_boost.png","","1.5x the money you earn for 30m.","XP and potions"],[74,"XP Candy x5","img/pass/xp_candy.png","x5","Feed it to a pet for Pet XP.","XP and potions"],[75,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[76,"2x Pet Speed Potion","img/pass/speed_pot.png","","Your pets move twice as fast for 30m.","XP and potions"],[77,"Booster Cookie","img/pass/cookie.png","","Every island effect on you for 30m.","XP and potions"],[78,"Legendary Cosmetic Key","img/pass/leg_cos_key.png","","Opens the Legendary Cosmetic Crate once.","Crate keys"],[79,"$10,000","img/pass/items-money_3_stack.png","$10K","Money for eggs, the market and your island.","Money"],[80,"Aurora Name Tag",null,"","Season 1 only. Name tag, animated.","Cosmetics"],[81,"+10% Mutation Potion","img/pass/mut10.png","","+10% mutation chance for 10m.","XP and potions"],[82,"XP Candy Jar","img/pass/xp_jar.png","","Feed it to a pet for Pet XP.","XP and potions"],[83,"+20% Mutation Potion","img/pass/mut20.png","","+20% mutation chance for 7m.","XP and potions"],[84,"XP Candy Bag","img/pass/xp_bag.png","","Feed it to a pet for Pet XP.","XP and potions"],[85,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[86,"2x Pet XP Potion","img/pass/xp_potion.png","","Your pets earn twice the Pet XP for 30m.","XP and potions"],[87,"$5,000","img/pass/items-money_2_bills.png","$5K","Money for eggs, the market and your island.","Money"],[88,"Booster Cookie x3","img/pass/cookie.png","x3","Every island effect on you for 30m.","XP and potions"],[89,"1.5x Money Booster","img/pass/money_boost.png","","1.5x the money you earn for 30m.","XP and potions"],[90,"Aurora Pack",null,"","Season 1 only. Backpack.","Cosmetics"],[91,"XP Candy x5","img/pass/xp_candy.png","x5","Feed it to a pet for Pet XP.","XP and potions"],[92,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[93,"2x Pet Speed Potion","img/pass/speed_pot.png","","Your pets move twice as fast for 30m.","XP and potions"],[94,"Booster Cookie","img/pass/cookie.png","","Every island effect on you for 30m.","XP and potions"],[95,"100 Gems","img/pass/gems.png","100","Gems buy cosmetics, crates, Ride and Fly.","Gems"],[96,"$10,000","img/pass/items-money_3_stack.png","$10K","Money for eggs, the market and your island.","Money"],[97,"+10% Mutation Potion","img/pass/mut10.png","","+10% mutation chance for 10m.","XP and potions"],[98,"XP Candy Jar","img/pass/xp_jar.png","","Feed it to a pet for Pet XP.","XP and potions"],[99,"Monthly Key","img/pass/monthly_key.png","","Opens the Monthly Crate once.","Crate keys"],[100,"7-Day MVP++ Voucher","img/pass/v_mvppp.png","","Right-click to be MVP++ for 7 days. Already MVP++ for good? You get 600 Gems instead.","Rank voucher"]]}; /*TRACK:end*/
+  const tierLine = (n) => { const [, name, , , text] = TRACK.tiers[n - 1]; return `<b>Tier ${n}</b> » <b class="t-gold">${esc(name)}</b>: ${esc(text)}`; };
+  function trackHTML() {
+    const T = TRACK.tiers;
+    const tile = ([n, name, src, ct]) => `<li><button class="tier${n % 10 === 0 ? ' is-mile' : ''}${n === T.length ? ' is-top' : ''}" type="button" data-tier="${n}" aria-pressed="${n === 1}" title="Tier ${n}: ${esc(name)}"><span class="tier__no num">${n}</span><span class="tier__ic"><img class="px" src="${src || 'img/icons/question_gold.png'}" alt="${esc(name)}">${ct ? `<span class="tier__ct num">${esc(ct)}</span>` : ''}</span></button></li>`;
+    return `
+      <section class="track panel c-gold" aria-labelledby="track-h">
+        <div class="track__top"><h2 class="info__h plain" id="track-h">Pet Pass <span class="c-gold">${esc(TRACK.season)}</span></h2>
+          <div class="track__facts"><span class="fact c-gold">${T.length} tiers</span><span class="fact c-purple">${TRACK.gemsBack.toLocaleString('en-US')} Gems back</span><span class="fact c-pink">With the Pet Club</span></div></div>
+        <p class="track__read" aria-live="polite">${T.length ? tierLine(1) : ''}</p>
+        <ol class="tiers">${T.map(tile).join('')}</ol>
+        <p class="note">One track: every tier is yours while you are in the Pet Club. Tiers come from playing, nobody can buy a tier skip. A <b>?</b> is a Season 1 cosmetic; its picture comes soon.</p>
+      </section>`;
+  }
+  // hover, focus or tap a tier: its reward on the line above the track
+  const showTier = (e) => {
+    const t = e.target.closest && e.target.closest('[data-tier]'); if (!t) return;
+    const box = t.closest('.track');
+    box.querySelectorAll('[data-tier]').forEach((b) => b.setAttribute('aria-pressed', b === t));
+    box.querySelector('.track__read').innerHTML = tierLine(+t.dataset.tier);
+  };
+  ['mouseover', 'focusin', 'click'].forEach((ev) => document.addEventListener(ev, showTier));
+
   function bundles() {
     const bArt = (b) => b.slot ? `<span class="art" data-slot="${b.slot}"><img src="${b.src}" alt=""></span>` : `<span class="art"><img src="${b.src}" alt=""></span>`;
-    const inclHTML = (b) => `<ul class="incl">${b.incl.map(([src, t]) => `<li><span class="incl__ic">${src ? `<img src="${src}" alt="">` : '<i title="Art needed: A1"></i>'}</span><span>${esc(t)}</span></li>`).join('')}</ul>`;
+    const inclHTML = (b) => `<ul class="incl">${b.incl.map(([src, t, c]) => `<li${c ? ` class="hl c-${c}"` : ''}><span class="incl__ic">${src ? `<img src="${src}" alt="">` : '<i title="Art needed: A1"></i>'}</span><span>${esc(t)}</span></li>`).join('')}</ul>`;
     // a rank bundle: a card, three side by side so the steps up read at a glance
     const card = (b) => {
       const pct = Math.round((1 - b.price / b.was) * 100);
@@ -949,7 +1171,7 @@ body.slots [data-slot]::after {
           ${priceHTML(b.price, b.sub ? 'USD / month' : 'USD')}
           ${b.was ? `<p class="save">You save ${usd(b.was - b.price)} USD</p>` : ''}
           <p class="once">${b.sub ? 'Monthly subscription' : esc(b.once || 'One-time purchase')}</p>
-          <button class="btn btn--block c-green" type="button" data-add="${b.id}">${b.sub ? IC.sub : IC.cart}<span>${b.sub ? 'Subscribe' : 'Purchase'}</span></button>
+          <button class="btn btn--block c-green" type="button" data-add="${b.id}">${IC.cart}<span>${b.sub ? 'Subscribe' : 'Purchase'}</span></button>
         </div>
       </article>`;
     };
@@ -957,7 +1179,7 @@ body.slots [data-slot]::after {
     return `
       <section class="bsec" aria-labelledby="bs-start"><h2 class="ruled plain" id="bs-start">Start here</h2><p class="bsec__sub">For new players: Gems and a hat to show you were here early.</p>${of('start').map(row).join('')}</section>
       <section class="bsec" aria-labelledby="bs-rank"><h2 class="ruled plain" id="bs-rank">Rank bundles</h2><p class="bsec__sub">A rank and a pile of Gems together, for less than buying them apart.</p><div class="bcards">${of('rank').map(card).join('')}</div></section>
-      <section class="bsec" aria-labelledby="bs-month"><h2 class="ruled plain" id="bs-month">Every month</h2><p class="bsec__sub">A subscription: Gems and a new cosmetic each month.</p>${of('month').map(row).join('')}</section>
+      <section class="bsec" aria-labelledby="bs-month"><h2 class="ruled plain" id="bs-month">Every month</h2><p class="bsec__sub">A subscription: the Pet Pass, Gems and a new cosmetic each month.</p>${of('month').map(row).join('')}</section>
       <p class="ranknote">Sample bundles and prices: the real ones are set in the final balancing run. The sale timer on the home tile is a sample too.</p>
       ${pageNav()}`;
   }
@@ -981,11 +1203,12 @@ body.slots [data-slot]::after {
 
   /* ------------------------------------------------------------ render */
   const view = $('#view');
-  const TITLES = { '': 'PetsMC Store', gems: 'Gems', ranks: 'Ranks', bundles: 'Bundles', pass: 'Pet Pass', club: 'Pet Club' };
+  const TITLES = { '': 'PetsMC Store', gems: 'Gems', ranks: 'Ranks', bundles: 'Bundles', vault: 'Gem Vault', club: 'Pet Club' };
   function route() {
     const k = location.hash.replace('#', '');
     const key = TITLES[k] !== undefined ? k : '';
-    view.innerHTML = key === '' ? home() : key === 'ranks' ? ranks() : key === 'bundles' ? bundles() : picker(key);
+    view.innerHTML = dealHTML(key) + (key === '' ? home() : key === 'ranks' ? ranks() : key === 'bundles' ? bundles() : picker(key));
+    if (key === '') { lbShow(lb.i); lbTick(); }
     document.title = key ? `PetsMC Store · ${TITLES[key]}` : 'PetsMC Store';
     renderNav(key);
     wireDiscord();
@@ -995,7 +1218,7 @@ body.slots [data-slot]::after {
   }
   function renderNav(current) {
     $('#nav').innerHTML = [{ key: '', name: 'Home', sub: 'You are browsing this', c: 'grey' }, ...CATS].map((c) => `
-      <li><a class="c-${c.c}" href="#${c.key}" ${c.key === current ? 'aria-current="page"' : ''} data-close><span><span class="nav__t">${esc(c.name)}</span><span class="nav__s">${c.key === current ? 'You are browsing this' : esc(c.sub)}</span></span></a></li>`).join('');
+      <li><a class="c-${c.c}" href="#${c.key}" ${c.key === current ? 'aria-current="page"' : ''} data-close><span><span class="nav__t">${esc(c.name)}</span></span></a></li>`).join('');
   }
   function wireDiscord() {
     document.querySelectorAll('.js-discord, #discord-sq').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); toast('Discord invite link not set yet: add it before launch.'); }));
@@ -1123,6 +1346,8 @@ body.slots [data-slot]::after {
 
   window.addEventListener('hashchange', () => { close(); route(); });
   renderUser(); renderCart(); route();
+  lbLoad(); setInterval(lbLoad, 60000);
+  setInterval(() => { const u = $('.lbx__upd'); if (u) u.textContent = lbAgo(); }, 30000);
 })();
 </script>
 <script>
