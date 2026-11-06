@@ -365,18 +365,21 @@ a.deal:hover { background: #ff62b3; }
 .lbx__tab { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: 0; border-radius: 12px; background: transparent; text-align: left; color: var(--ink-2); font: 900 14px/1.2 var(--f-body); letter-spacing: .03em; text-transform: uppercase; overflow: hidden; }
 .lbx__tab:hover { background: #fff; }
 .lbx__tab[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 3px 0 var(--edge); }
-.lbx__tab img { width: 32px; height: 32px; image-rendering: pixelated; }
+/* pixel art on whole pixels (T-1267, owner 2026-11-06 15:27: "bag icon on the lbs is fucked up"): the store is drawn at
+ * 80 % from 761 px wide, so a 16 px icon at 32 px landed on 25.6 screen px and its 1 px strokes doubled unevenly; on that
+ * scale every pixel picture is a multiple of 20 px (16 px art at 40 = 32 screen px, 2x; 3x at 60), on phones of 16 */
+.lbx__tab img { width: 40px; height: 40px; image-rendering: pixelated; }
 .lbx__tab .lbx__bar { position: absolute; left: 10px; right: 10px; bottom: 3px; height: 3px; border-radius: 3px; background: #ff4da9; transform-origin: left; transform: scaleX(0); }
 .lbx__tab[aria-pressed="true"] .lbx__bar.run { animation: lb-bar var(--lb-dur, 8s) linear forwards; }
 @keyframes lb-bar { to { transform: scaleX(1); } }
 .lbx__main { display: flex; flex-direction: column; gap: 14px; padding: 22px 26px; min-width: 0; }
 .lbx__top { display: flex; align-items: center; gap: 14px; }
-.lbx__top img { width: 48px; height: 48px; image-rendering: pixelated; }
+.lbx__top img { width: 60px; height: 60px; image-rendering: pixelated; }
 .lbx__name { font: 400 30px/1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
 .lbx__about { color: var(--ink-3); font-size: 14px; }
 .lbx__upd { margin-left: auto; color: var(--ink-3); font-size: 13px; white-space: nowrap; }
 .lbx__rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-.lbx__rows li { display: grid; grid-template-columns: 44px 36px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 14px 8px 8px;
+.lbx__rows li { display: grid; grid-template-columns: 44px 40px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 14px 8px 8px;
   border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 12px; background: #fff; animation: lb-in .35s both; }
 .lbx__rows li:nth-child(2) { animation-delay: .05s; } .lbx__rows li:nth-child(3) { animation-delay: .1s; } .lbx__rows li:nth-child(4) { animation-delay: .15s; } .lbx__rows li:nth-child(5) { animation-delay: .2s; }
 @keyframes lb-in { from { opacity: 0; transform: translateY(8px); } }
@@ -384,7 +387,7 @@ a.deal:hover { background: #ff62b3; }
 .lbx__rows li.p1 { border-color: #ffd75a; background: #fffaf0; } .lbx__rows li.p1 .lbx__rank { background: #ffcc24; color: #fff; text-shadow: 0 2px 0 #c98a00; box-shadow: inset 0 -4px 0 #f0951f; }
 .lbx__rows li.p2 .lbx__rank { background: #cfd5e2; color: #fff; text-shadow: 0 2px 0 #7c8497; box-shadow: inset 0 -4px 0 #a7afc0; }
 .lbx__rows li.p3 .lbx__rank { background: #f0a36b; color: #fff; text-shadow: 0 2px 0 #9a4f1c; box-shadow: inset 0 -4px 0 #d4793d; }
-.lbx__rows img.head { width: 36px; height: 36px; border-radius: 8px; image-rendering: pixelated; background: var(--cell); }
+.lbx__rows img.head { width: 40px; height: 40px; border-radius: 8px; image-rendering: pixelated; background: var(--cell); }
 .lbx__who { color: var(--ink); font-weight: 900; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .lbx__val { font: 400 22px/1 var(--f-display); letter-spacing: .02em; }
 .lbx__note { color: var(--ink-3); font-size: 13px; }
@@ -439,10 +442,10 @@ a.deal:hover { background: #ff62b3; }
 .info li { display: flex; align-items: center; gap: 12px; color: var(--ink-2); }
 /* a line's icon: the /store icon set's 16 px picture at 2x on a small tile in its own colour (the store's CART REWARDS
  * tiles) */
-.info__ic { flex: 0 0 auto; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px;
+.info__ic { flex: 0 0 auto; display: grid; place-items: center; width: 50px; height: 50px; border-radius: 12px;
   background: color-mix(in srgb, var(--face) 14%, #fff); border: 2px solid color-mix(in srgb, var(--face) 40%, #fff);
   border-bottom-width: 4px; }
-.info__ic img { width: 32px; height: 32px; }
+.info__ic img { width: 40px; height: 40px; }
 /* words by meaning, in the darker tone of each colour so they read on white */
 .t-purple { color: #8A4AE0; } .t-gold { color: #D97A12; } .t-green { color: #2A9E25; } .t-blue { color: #1287D9; }
 .t-pink { color: #D9328F; } .t-red { color: #D92F3A; }
@@ -469,8 +472,8 @@ a.deal:hover { background: #ff62b3; }
   background: color-mix(in srgb, var(--face) 9%, #fff); border: 2px solid color-mix(in srgb, var(--face) 30%, #fff);
   border-bottom-width: 4px; border-radius: 10px; font: inherit; color: var(--ink-3); }
 .tier__no { font: 900 12px/1 var(--f-body); }
-.tier__ic { position: relative; display: grid; place-items: center; width: 40px; height: 40px; }
-.tier__ic img { width: 32px; height: 32px; }
+.tier__ic { position: relative; display: grid; place-items: center; width: 50px; height: 50px; }
+.tier__ic img { width: 40px; height: 40px; }
 .tier__ct { position: absolute; right: -6px; bottom: -4px; padding: 2px 4px 1px; border-radius: 5px; background: #fff;
   border: 1px solid var(--line); color: var(--ink); font: 900 10px/1 var(--f-body); }
 .tier.is-mile { border-color: var(--face); background: color-mix(in srgb, var(--face) 20%, #fff); color: var(--deep); }
@@ -713,8 +716,11 @@ a.deal:hover { background: #ff62b3; }
   .lbx__main { padding: 18px 14px; }
   .lbx__name { font-size: 24px; }
   .lbx__upd { display: none; }
-  .lbx__rows li { grid-template-columns: 36px 30px minmax(0, 1fr) auto; gap: 10px; }
-  .lbx__rows img.head { width: 30px; height: 30px; }
+  .lbx__rows li { grid-template-columns: 36px 32px minmax(0, 1fr) auto; gap: 10px; }
+  .lbx__rows img.head { width: 32px; height: 32px; }
+  .lbx__tab img { width: 32px; height: 32px; } .lbx__top img { width: 48px; height: 48px; }
+  .info__ic { width: 40px; height: 40px; border-radius: 10px; } .info__ic img { width: 32px; height: 32px; }
+  .tier__ic { width: 40px; height: 40px; } .tier__ic img { width: 32px; height: 32px; }
   .feats, .incl { grid-template-columns: minmax(0, 1fr); }
   .prod { grid-template-columns: minmax(0, 1fr); }
   .prod__art { min-height: 260px; border-right: 0; border-bottom: 2px solid var(--line); }
@@ -1130,7 +1136,7 @@ a.deal:hover { background: #ff62b3; }
     const b = LB_BOARDS[lb.i], rows = lbRows(b);
     const list = rows.length ? rows.map((r, n) => `
         <li class="${n < 3 ? 'p' + (n + 1) : ''}"><span class="lbx__rank num">${n + 1}</span>
-          <img class="head" src="https://mc-heads.net/avatar/${encodeURIComponent(r.name)}/36" alt="" loading="lazy">
+          <img class="head" src="https://mc-heads.net/avatar/${encodeURIComponent(r.name)}/40" alt="" loading="lazy">
           <span class="lbx__who">${esc(r.name)}</span><span class="lbx__val num v-${b.v}">${esc(lbVal(b, +r.value))}</span></li>`).join('')
       : '<li><span class="lbx__who">Nobody on this board yet. Be the first!</span></li>';
     return `
