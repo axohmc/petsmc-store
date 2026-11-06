@@ -1,5 +1,27 @@
 # PetsMC store (store.petsmc.net)
 
+**Since 2026-11-05 (T-1214, owner Axoh: "ok deploy to the live store") the store is the XraySMP-layout page**: logo over
+the header bar, category tiles with the store renders and the menus' glyph patterns, Gems / Pet Pass / Pet Club pickers,
+Bundles in three groups, the ranks table, login window and cart drawer, all white with rounded corners. Its source and
+every round of the owner's notes: [docs/store-web/xraysmp-layout/](../../docs/store-web/xraysmp-layout/README.md).
+**Do not edit `index.html` or `img/` here by hand**: edit the sample's `index.html` and run
+`python docs/store-web/xraysmp-layout/build_live.py`, which writes them (a full page head, the coming-soon gate, the
+SAMPLE strip, no art tools).
+
+| File | What |
+|---|---|
+| `index.html` | The page (built by build_live.py): its CSS, its sample catalogue and its script are inside it |
+| `img/` | Its pictures: the owner's logo and paw, the store renders (pixel look), the line icons, the favicons |
+| `assets/` | **The old Tebex-theme site (T-0690), no longer loaded by the page.** Kept for its Tebex Headless calls (`store.js`) and config, which the new page does not have yet: once Tebex is linked, its checkout moves over |
+| `CNAME`, `robots.txt`, `.nojekyll` | GitHub Pages: the custom domain, no indexing while the gate is on |
+
+Not done yet: checkout (the page's cart is a sample; nothing can be bought, as before), the Discord invite, the Founder
+pet hat icon and the link preview image.
+
+The older note on the Tebex-theme site follows.
+
+## The Tebex-theme site (T-0690, 2026-10-20 to 2026-11-05)
+
 The PetsMC web store, built on **Tebex's own Headless store theme** ([tebexio/Headless-Template](https://github.com/tebexio/Headless-Template),
 MIT, see `LICENSE-tebex-template.txt`) and restyled in the PetsMC Gem Shop look. Tebex's theme is a Nuxt app; this is the
 same layout and the same Tebex calls ported to plain HTML, CSS and one script, so it is static files only and runs on any
