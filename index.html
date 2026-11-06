@@ -868,7 +868,8 @@ a.deal:hover { background: #ff62b3; }
   /* ------------------------------------------------------------ the sample catalogue (proposed prices from docs/design/monetization.md; the bundles are samples) */
   const PH = (slot, title, size, light) => ({ ph: slot, title, size, light });
   const CATS = [
-    { key: 'bundles', name: 'Bundles', sub: 'The best perks all in one', c: 'orange', tile: 'bundles', g: 'gift', art: { src: 'img/starter.webp', slot: 'have' }, ends: '2026-11-30T08:00:00Z' },
+    // red with a green present (owner Axoh 2026-11-06 15:08, T-1260: "change the bundles thing to be red and make the present green")
+    { key: 'bundles', name: 'Bundles', sub: 'The best perks all in one', c: 'red', tile: 'bundles', g: 'gift', art: { src: 'img/bundles_gift.webp', slot: 'have' }, ends: '2026-11-30T08:00:00Z' },
     { key: 'gems', name: 'Gems', sub: 'Store currency', c: 'teal', tile: 'gems', g: 'gem', art: { src: 'img/gems_2500.webp', slot: 'have' } },
     { key: 'ranks', name: 'Ranks', sub: 'Show off with a shiny tag!', c: 'blue', tile: 'ranks', g: 'crown', art: { src: 'img/ranks.webp', slot: 'have' } },
     // T-1246 (owner Axoh 2026-11-06: "replace the pet pass with gem vault since we dont need it since its under pet club now"; the Pass is in the Club, T-1245)
