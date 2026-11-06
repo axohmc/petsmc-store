@@ -160,8 +160,25 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 .ip:active .ip__copy { transform: translateY(2px); border-bottom-width: 1px; margin-bottom: 2px; }
 .ip.is-copied .ip__copy { background: #4ddc1e; border-bottom-color: #2fb52a; text-shadow: 0 1px 0 #145c3e; }
 .ip.is-copied .ip__copy svg { filter: drop-shadow(0 1px 0 #145c3e); }
+/* the right of the header: the Discord box (like the account box: its icon, then the online count over DISCORD) and the
+ * cart (T-1253, owner 2026-11-06: "add a discord button too (discord.gg/petsmc)") */
+.hbtns { align-self: center; justify-self: end; display: flex; align-items: center; gap: 14px; }
+.dcbtn { display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; background: var(--cell); border: 2px solid var(--line);
+  border-bottom-width: 4px; border-radius: var(--r-md); color: var(--ink); text-decoration: none; transition: transform .1s, border-color .1s; }
+.dcbtn:hover { transform: translateY(-2px); border-color: var(--edge); }
+.dcbtn__ic { width: 56px; height: 56px; display: grid; place-items: center; background: #5865f2; border: 3px solid #4752c4;
+  border-bottom-width: 6px; border-radius: 12px; color: #fff; }
+.dcbtn__ic svg { width: 30px; height: 30px; filter: drop-shadow(0 2px 0 #2b3190); }
+.dcbtn__k { display: flex; align-items: center; gap: 6px; color: var(--ink-3); font: 800 13px/1.1 var(--f-body); text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+.dcbtn__k i { width: 8px; height: 8px; border-radius: 50%; background: #4ddc1e; box-shadow: 0 0 0 0 rgb(77 220 30 / .6); animation: live 1.6s infinite; }
+.dcbtn__v { display: block; color: var(--ink); font: 400 20px/1.15 var(--f-display); text-transform: uppercase; letter-spacing: .03em; }
+/* online now (T-1253, owner: "a online now (like oneblockmc.net)"): the server's player count under the IP, read every minute */
+.online { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px 4px; border-radius: 999px; background: #e9fbe3;
+  border: 2px solid #c8f2b8; color: #2b9a1f; font: 900 13px/1 var(--f-body); letter-spacing: .08em; text-transform: uppercase; }
+.online b { font: 400 16px/1 var(--f-display); letter-spacing: .02em; color: #23801a; }
+.online i { width: 9px; height: 9px; border-radius: 50%; background: #4ddc1e; box-shadow: 0 0 0 0 rgb(77 220 30 / .6); animation: live 1.6s infinite; }
 .cartbtn {
-  position: relative; align-self: center; justify-self: end; display: grid; place-items: center;
+  position: relative; display: grid; place-items: center;
   width: 84px; height: 84px; padding: 0; border: 3px solid var(--rim); border-bottom-width: 8px; border-radius: var(--r); background: var(--face); color: var(--text);
   transition: transform .1s, background-color .12s;
 }
@@ -261,9 +278,6 @@ body.slots [data-slot]::after {
 .feat::before { content: ""; flex: 0 0 auto; width: 12px; height: 12px; margin-top: 8px; border-radius: 3px; background: var(--c); box-shadow: 0 3px 0 var(--d); }
 .feat p { color: var(--ink-2); font-size: 15.5px; line-height: 1.65; }
 .feat b { color: var(--ink); font-weight: 900; }
-.thanks { text-align: center; color: var(--ink-2); font-size: 16px; line-height: 1.9; }
-.thanks a { color: #1287d9; font-weight: 900; text-decoration: none; border-bottom: 2px solid currentColor; }
-.thanks img { display: inline-block; width: 26px; vertical-align: -6px; margin-right: 6px; }
 
 
 /* ---------------------------------------------------------------- animated page background (owner Axoh 2026-11-06, T-1251:
@@ -282,23 +296,62 @@ body.slots [data-slot]::after {
 @keyframes bg-lights { 0% { transform: translate3d(-4%, -3%, 0) scale(1); } 50% { transform: translate3d(5%, 2%, 0) scale(1.08); } 100% { transform: translate3d(-2%, 5%, 0) scale(1.02); } }
 
 /* ---------------------------------------------------------------- the limited deal (owner 2026-11-06, T-1251: "add a limited
- * deal at the top aswell (x% off bundles)"): one orange bar over every page, the bundles' best % off and the sale's clock */
-.deal { position: relative; overflow: hidden; display: flex; align-items: center; gap: 18px; padding: 14px 18px 14px 22px;
-  background: #ff9a1f; color: #fff; text-decoration: none; border-radius: var(--r); box-shadow: 0 6px 0 #e0700f;
-  transition: transform .12s, box-shadow .12s; }
-a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
+ * deal at the top aswell (x% off bundles)"; T-1253, 13:56: "make the banner pink and above the header"): a pink band over the
+ * whole width above the header, the bundles' best % off and the sale's clock; a glint runs across it */
+.deal { position: relative; overflow: hidden; display: block; background: #ff4da9; color: #fff; text-decoration: none;
+  border-bottom: 5px solid #d9328f; transition: background-color .12s; }
+a.deal:hover { background: #ff62b3; }
 .deal::after { content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / .28) 48%, transparent 56%) -150% 0 / 60% 100% no-repeat;
+  background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / .3) 48%, transparent 56%) -150% 0 / 60% 100% no-repeat;
   animation: deal-glint 4.5s ease-in-out infinite; }
 @keyframes deal-glint { 0%, 55% { background-position: -150% 0; } 100% { background-position: 250% 0; } }
-.deal__tag { flex: 0 0 auto; padding: 6px 10px 5px; border-radius: 8px; background: #ff4444; border-bottom: 4px solid #c92a33;
-  font: 900 13px/1 var(--f-body); letter-spacing: .1em; animation: deal-pulse 1.6s ease-in-out infinite; }
+.deal__in { display: flex; align-items: center; justify-content: center; gap: 16px; padding-block: 11px; }
+.deal__tag { flex: 0 0 auto; padding: 6px 10px 5px; border-radius: 8px; background: #fff; color: #d9328f; border-bottom: 4px solid #ffc2e1;
+  font: 900 12.5px/1 var(--f-body); letter-spacing: .1em; animation: deal-pulse 1.6s ease-in-out infinite; }
 @keyframes deal-pulse { 50% { transform: scale(1.06); } }
-.deal__pct { font: 400 34px/1 var(--f-display); letter-spacing: .02em; text-shadow: 0 3px 0 #b5520a; white-space: nowrap; }
-.deal__what { font: 400 22px/1.1 var(--f-display); letter-spacing: .03em; text-transform: uppercase; text-shadow: 0 2px 0 #b5520a; }
-.deal__end { margin-left: auto; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
-.deal__clock { padding: 7px 12px 5px; border-radius: 10px; background: #fff; color: var(--ink); border-bottom: 4px solid #f0c48f; font: 400 20px/1 var(--f-display); }
-.deal__go { padding: 9px 14px 7px; border-radius: 10px; background: #4ddc1e; border-bottom: 4px solid #2fb52a; font: 400 17px/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase; text-shadow: 0 2px 0 #145c3e; }
+.deal__pct { font: 400 30px/1 var(--f-display); letter-spacing: .02em; text-shadow: 0 3px 0 #a8226d; white-space: nowrap; }
+.deal__what { font: 400 21px/1.1 var(--f-display); letter-spacing: .03em; text-transform: uppercase; text-shadow: 0 2px 0 #a8226d; }
+.deal__clock { padding: 7px 12px 5px; border-radius: 10px; background: #fff; color: var(--ink); border-bottom: 4px solid #ffc2e1; font: 400 19px/1 var(--f-display); white-space: nowrap; }
+.deal__go { padding: 9px 14px 7px; border-radius: 10px; background: #4ddc1e; border-bottom: 4px solid #2fb52a; font: 400 17px/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase; text-shadow: 0 2px 0 #145c3e; white-space: nowrap; }
+
+/* ---------------------------------------------------------------- the community goal and the recent buyers (T-1253, owner
+ * 2026-11-06 13:46: "make a community goal system like what other servers do ... its a keyall for every x spent", "show recent
+ * purchase's skins (in a little thing below the main offers)"): Tebex stores' Community Goal module, a bar to the next Key All */
+.cg { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; }
+.goal { display: flex; flex-direction: column; justify-content: center; gap: 14px; padding: 22px 24px; }
+.goal__top { display: flex; align-items: center; gap: 14px; }
+.goal__ic { flex: 0 0 auto; width: 58px; height: 58px; display: grid; place-items: center; background: #fff0f8; border: 2px solid #ffd2e9; border-bottom-width: 5px; border-radius: 14px; }
+.goal__ic img { width: 40px; height: 40px; image-rendering: pixelated; animation: key-wiggle 2.6s ease-in-out infinite; }
+@keyframes key-wiggle { 0%, 70%, 100% { transform: rotate(0); } 78% { transform: rotate(-12deg); } 86% { transform: rotate(10deg); } 94% { transform: rotate(-4deg); } }
+.goal__h { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; font: 400 26px/1 var(--f-display); color: var(--ink); text-transform: uppercase; letter-spacing: .02em; }
+.goal__sub { color: var(--ink-2); font-size: 14.5px; line-height: 1.45; }
+.goal__sub b { color: var(--ink); }
+.goal__n { margin-left: auto; flex: 0 0 auto; text-align: center; }
+.goal__n b { display: block; font: 400 30px/1 var(--f-display); color: #ff4da9; }
+.goal__n small { display: block; color: var(--ink-3); font: 800 11px/1.2 var(--f-body); text-transform: uppercase; letter-spacing: .06em; }
+.goal__bar { position: relative; height: 36px; border-radius: 999px; background: #eceef5; border: 2px solid var(--line);
+  box-shadow: inset 0 3px 0 rgb(43 45 58 / .08); overflow: hidden; }
+.goal__fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: inherit;
+  background: repeating-linear-gradient(-45deg, #ff4da9 0 12px, #ff70bb 12px 24px); background-size: 34px 34px;
+  box-shadow: inset 0 -5px 0 #d9328f, inset 0 3px 0 rgb(255 255 255 / .35);
+  transition: width 1.3s cubic-bezier(.2, .8, .2, 1); animation: goal-stripes 1.1s linear infinite; }
+@keyframes goal-stripes { to { background-position: 34px 0; } }
+.goal__amt { position: absolute; inset: 0; display: grid; place-items: center; font: 400 18px/1 var(--f-display); color: var(--ink); letter-spacing: .02em; text-shadow: 0 1px 0 #fff, 0 0 6px #fff; }
+.goal__amt > span { padding: 5px 12px 4px; border-radius: 999px; background: rgb(255 255 255 / .94); box-shadow: 0 2px 0 rgb(43 45 58 / .12); text-shadow: none; }
+.goal__amt .num { color: #c98a00; }
+.goal__foot { color: var(--ink-3); font-size: 13.5px; }
+.goal__foot b { color: #ff4da9; }
+.recent { display: flex; flex-direction: column; gap: 12px; padding: 18px 20px; min-width: 0; }
+.recent__h { display: flex; align-items: center; gap: 10px; font: 400 22px/1 var(--f-display); color: var(--ink); text-transform: uppercase; letter-spacing: .02em; }
+.recent__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.recent__list li { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; padding: 10px 4px 7px;
+  background: var(--cell); border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 12px; animation: lb-in .4s both; }
+.recent__list li:nth-child(2) { animation-delay: .06s; } .recent__list li:nth-child(3) { animation-delay: .12s; } .recent__list li:nth-child(4) { animation-delay: .18s; } .recent__list li:nth-child(5) { animation-delay: .24s; } .recent__list li:nth-child(6) { animation-delay: .3s; }
+.recent__list img { height: 78px; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(0 5px 4px rgb(43 45 58 / .18)); animation: bob 3.2s ease-in-out infinite; }
+.recent__list li:nth-child(2n) img { animation-delay: -1.6s; }
+@keyframes bob { 50% { transform: translateY(-4px); } }
+.recent__list b { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); font-size: 12.5px; }
+.recent__list small { color: var(--ink-3); font-size: 11px; line-height: 1.2; }
 
 /* ---------------------------------------------------------------- live leaderboards (owner 2026-11-06, T-1251: "add a live ui
  * thing tied to the leaderboards (the main ones ...) instead of the clutter of how to buy and what pets is") */
@@ -519,27 +572,21 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
 .ranknote b { color: var(--ink); }
 
 /* ---------------------------------------------------------------- footer */
-.foot { border-top: 2px solid var(--line); background: var(--panel); padding-block: 52px 0; }
-.foot__top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; padding-bottom: 32px; border-bottom: 2px solid var(--line); }
-.foot__brand { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; font: 400 28px/1 var(--f-display); text-transform: uppercase; letter-spacing: .03em; }
-.foot__brand .art { width: 46px; height: 46px; display: grid; place-items: center; }
-.foot__brand .art img { width: 46px; height: auto; }
-.foot__brand .p { color: #ff4da9; } .foot__brand .m { color: #19b8ff; }
-.foot p { color: var(--ink-2); font-size: 15px; line-height: 1.95; max-width: 52ch; }
-.foot__support { text-align: right; }
-.foot__support p { margin-left: auto; }
-.foot__title { display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin-bottom: 14px; color: var(--ink); font: 400 28px/1 var(--f-display); text-transform: uppercase; letter-spacing: .03em; }
-.sq { display: grid; place-items: center; width: 44px; height: 44px; background: var(--cell); border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 10px; color: var(--ink); text-decoration: none; }
-.sq svg { width: 20px; height: 20px; }
+/* the footer: contact and copyright only (owner 2026-11-06, T-1253: "get rid of all of the bottom text except for contact and
+ * copyright"); the copyright line keeps the two legal sentences the store must carry (Mojang's, Tebex's) */
+.foot { border-top: 2px solid var(--line); background: var(--panel); padding-block: 34px 26px; }
+.foot__row { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 22px; border-bottom: 2px solid var(--line); }
+.foot__title { margin-bottom: 8px; color: var(--ink); font: 400 24px/1 var(--f-display); text-transform: uppercase; letter-spacing: .03em; }
+.foot p { color: var(--ink-2); font-size: 15px; line-height: 1.8; max-width: 70ch; }
 .foot a.u { color: var(--ink); font-weight: 900; text-decoration: none; border-bottom: 2px solid currentColor; }
-.foot__bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 24px; }
-.foot__legal { color: var(--ink-3); font-size: 13.5px; line-height: 1.7; }
+.foot__dc { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 8px 10px; border-radius: 12px; background: #5865f2;
+  border-bottom: 5px solid #4752c4; color: #fff; text-decoration: none; font: 400 17px/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase;
+  text-shadow: 0 2px 0 #2b3190; transition: transform .1s; }
+.foot__dc:hover { transform: translateY(-2px); }
+.foot__dc svg { width: 24px; height: 24px; }
+.foot__legal { padding-top: 18px; color: var(--ink-3); font-size: 12.5px; line-height: 1.7; }
 .foot__legal b { color: var(--ink); font: 400 15px/1 var(--f-display); letter-spacing: .03em; }
-.tebex { border-top: 2px solid var(--line); background: var(--cell); }
-.tebex .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 22px; padding-block: 12px; font-size: 12px; color: var(--ink-3); }
-.tebex b { color: var(--ink); font: 900 13px/1 var(--f-body); }
-.tebex nav { display: flex; gap: 16px; }
-.tebex a { color: var(--ink-2); }
+.foot__legal a { color: var(--ink-2); }
 
 /* ---------------------------------------------------------------- overlays: login window, cart and category drawers, art list */
 .scrim { position: fixed; inset: 0; z-index: 40; background: rgb(43 45 58 / .45); backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity .18s; }
@@ -640,7 +687,7 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
   .brand__logo { width: min(300px, 78vw); margin-top: -80px; }
   .acct { grid-row: 2; grid-column: 1 / 3; padding: 8px 14px 8px 8px; }
   .acct__head { width: 46px; height: 46px; } .acct__head svg { width: 24px; height: 24px; }
-  .cartbtn { grid-row: 2; grid-column: 3; width: 66px; height: 66px; } .cartbtn svg { width: 30px; height: 30px; }
+  .cartbtn { width: 66px; height: 66px; } .cartbtn svg { width: 30px; height: 30px; }
   .ip { font-size: 15px; gap: 8px; padding-left: 12px; } .ip__copy { padding: 6px 9px 4px; font-size: 13px; }
   .tiles { grid-template-columns: minmax(0, 1fr); grid-template-areas: "bundles" "gems" "ranks" "vault" "club"; }
   .tile--vault .art { height: 70%; right: 1%; bottom: 6%; }
@@ -649,9 +696,16 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
   .tile__title { font-size: 38px; }
   .tile__text, .tile--ranks .tile__text, .tile--club .tile__text, .tile--vault .tile__text, .tile--gems .tile__text { max-width: 60%; }
   .timer { font-size: 17px; right: -4px; }
-  .deal { flex-wrap: wrap; gap: 10px 14px; padding: 14px 16px; }
-  .deal__pct { font-size: 28px; } .deal__what { font-size: 18px; }
-  .deal__end { margin-left: 0; width: 100%; justify-content: space-between; }
+  .deal__in { flex-wrap: wrap; gap: 8px 10px; padding-block: 10px; }
+  .deal__pct { font-size: 23px; } .deal__what { font-size: 16px; } .deal__clock { font-size: 15px; } .deal__go { font-size: 14px; }
+  .cg { grid-template-columns: minmax(0, 1fr); }
+  .goal { padding: 18px 16px; } .goal__h { font-size: 21px; }
+  .goal__top { flex-wrap: wrap; } .goal__top > div { flex: 1 1 0; min-width: 0; }
+  .goal__n { order: 3; width: 100%; margin-left: 0; display: flex; align-items: baseline; gap: 8px; text-align: left; }
+  .recent__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hbtns { grid-row: 2; grid-column: 3; gap: 10px; }
+  .dcbtn { padding: 0; border: 0; background: none; } .dcbtn__t { display: none; }
+  .dcbtn__ic { width: 66px; height: 66px; } .dcbtn__ic svg { width: 32px; height: 32px; }
   .lbx { grid-template-columns: minmax(0, 1fr); }
   .lbx__side { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 2px solid var(--line); padding: 16px; }
   .lbx__h { width: 100%; }
@@ -669,9 +723,7 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
   .opts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bundle { grid-template-columns: minmax(0, 1fr); }
   .bundle__hero { grid-row: auto; min-height: 200px; }
-  .foot__top { grid-template-columns: minmax(0, 1fr); }
-  .foot__support { text-align: left; } .foot__support p { margin-left: 0; } .foot__title { justify-content: flex-start; flex-direction: row-reverse; }
-  .foot__bottom { align-items: flex-start; }
+  .foot__row { flex-direction: column; align-items: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
@@ -710,6 +762,8 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
 
 <div class="strip"><b>SAMPLE STORE:</b> proposed packs and prices, nothing can be bought yet.</div>
 
+<div id="deal-slot"></div>
+
 <header class="top wrap">
   <div class="bar">
     <button class="acct" id="acct" type="button" aria-label="Log in">
@@ -722,11 +776,18 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
         <span class="ip__t" id="ip-t">play.petsmc.net</span>
         <span class="ip__copy"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M11 5V2H2v9h3"/></svg><span id="ip-c">Copy</span></span>
       </button>
+      <span class="online" id="online" hidden><i></i><b class="num" id="online-n">0</b> online now</span>
     </div>
-    <button class="cartbtn c-green" id="cartbtn" type="button" aria-label="Open cart">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5.2 4H2V2h4.8l.9 2H21a1 1 0 0 1 .9 1.4l-3.6 7A2 2 0 0 1 16.5 13.5H8.1l-1 1.8V16H19v2H5v-3.2l1.6-2.9L5.2 4Z"/></svg>
-      <span class="cartbtn__n num" id="cartn" hidden>0</span>
-    </button>
+    <div class="hbtns">
+      <a class="dcbtn js-discord" href="https://discord.gg/petsmc" target="_blank" rel="noopener" aria-label="Join the PetsMC Discord">
+        <span class="dcbtn__ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 5.3A17 17 0 0 0 15.4 4l-.5 1a15.7 15.7 0 0 0-5.8 0L8.6 4a17 17 0 0 0-4.2 1.3C1.7 9.3 1 13.2 1.3 17a17 17 0 0 0 5.2 2.6l1.1-1.8a11 11 0 0 1-1.7-.8l.4-.3a12.2 12.2 0 0 0 11.4 0l.4.3-1.7.8 1.1 1.8a17 17 0 0 0 5.2-2.6c.4-4.4-.7-8.3-3.1-11.7ZM8.5 14.8c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm7 0c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg></span>
+        <span class="dcbtn__t"><span class="dcbtn__k" id="dc-k">Discord</span><span class="dcbtn__v">Join us</span></span>
+      </a>
+      <button class="cartbtn c-green" id="cartbtn" type="button" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5.2 4H2V2h4.8l.9 2H21a1 1 0 0 1 .9 1.4l-3.6 7A2 2 0 0 1 16.5 13.5H8.1l-1 1.8V16H19v2H5v-3.2l1.6-2.9L5.2 4Z"/></svg>
+        <span class="cartbtn__n num" id="cartn" hidden>0</span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -734,28 +795,17 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
 
 <footer class="foot">
   <div class="wrap">
-    <div class="foot__top">
+    <div class="foot__row">
       <div>
-        <h2 class="foot__brand"><span class="art"><img src="img/paw.webp" alt=""></span><span><span class="p">Pets</span><span class="m">MC</span></span></h2>
-        <p>Welcome to the official PetsMC store. Every purchase helps keep the server online and pays for new pets and updates. Thank you for the support!</p>
-        <p>Everything in the store is a cosmetic or a comfort. Nothing you buy makes your pets stronger.</p>
+        <h2 class="foot__title">Contact</h2>
+        <p>Questions, or a purchase that has not arrived after 20 minutes? Open a ticket on our <a class="u js-discord" href="https://discord.gg/petsmc" target="_blank" rel="noopener">Discord</a>.
+          Refunds, declined cards and subscriptions: <a class="u" href="https://www.tebex.io/support-customer" target="_blank" rel="noopener">Tebex support</a>.</p>
       </div>
-      <div class="foot__support">
-        <h2 class="foot__title">Support <span class="sq" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 3h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H8l-5 4V4a1 1 0 0 1 1-1Z"/></svg></span></h2>
-        <p>Questions before checkout? Waited more than 20 minutes and your purchase still has not arrived? Open a ticket on our Discord and staff will sort it out.</p>
-        <p>Payment problems (refunds, declined cards, subscriptions) are handled by <a class="u" href="https://www.tebex.io/support-customer" target="_blank" rel="noopener">Tebex support</a>.</p>
-      </div>
+      <a class="foot__dc js-discord" href="https://discord.gg/petsmc" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 5.3A17 17 0 0 0 15.4 4l-.5 1a15.7 15.7 0 0 0-5.8 0L8.6 4a17 17 0 0 0-4.2 1.3C1.7 9.3 1 13.2 1.3 17a17 17 0 0 0 5.2 2.6l1.1-1.8a11 11 0 0 1-1.7-.8l.4-.3a12.2 12.2 0 0 0 11.4 0l.4.3-1.7.8 1.1 1.8a17 17 0 0 0 5.2-2.6c.4-4.4-.7-8.3-3.1-11.7ZM8.5 14.8c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm7 0c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg><span>discord.gg/petsmc</span></a>
     </div>
-    <div class="foot__bottom">
-      <p class="foot__legal"><b>© PetsMC 2026.</b> All rights reserved.<br>Not an official Minecraft service. Not approved by or associated with Mojang or Microsoft.</p>
-      <a class="sq" href="#" id="discord-sq" aria-label="Discord (invite link not set yet)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 5.3A17 17 0 0 0 15.4 4l-.5 1a15.7 15.7 0 0 0-5.8 0L8.6 4a17 17 0 0 0-4.2 1.3C1.7 9.3 1 13.2 1.3 17a17 17 0 0 0 5.2 2.6l1.1-1.8a11 11 0 0 1-1.7-.8l.4-.3a12.2 12.2 0 0 0 11.4 0l.4.3-1.7.8 1.1 1.8a17 17 0 0 0 5.2-2.6c.4-4.4-.7-8.3-3.1-11.7ZM8.5 14.8c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm7 0c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg></a>
-    </div>
-  </div>
-  <div class="tebex">
-    <div class="wrap">
-      <span><b>tebex</b> &nbsp;This website and its checkout process is operated by our online reseller and Merchant of Record, Tebex Limited, who also handles order-related inquiries and refunds.</span>
-      <nav><a href="https://checkout.tebex.io/impressum" target="_blank" rel="noopener">Impressum</a><a href="https://checkout.tebex.io/terms" target="_blank" rel="noopener">Terms</a><a href="https://checkout.tebex.io/privacy" target="_blank" rel="noopener">Privacy</a></nav>
-    </div>
+    <p class="foot__legal"><b>© PetsMC 2026.</b> All rights reserved. Not an official Minecraft service. Not approved by or associated with Mojang or Microsoft.
+      This website and its checkout process is operated by our online reseller and Merchant of Record, Tebex Limited, who also handles order-related inquiries and refunds.
+      <a href="https://checkout.tebex.io/terms" target="_blank" rel="noopener">Terms</a> · <a href="https://checkout.tebex.io/privacy" target="_blank" rel="noopener">Privacy</a> · <a href="https://checkout.tebex.io/impressum" target="_blank" rel="noopener">Impressum</a></p>
   </div>
 </footer>
 
@@ -949,11 +999,88 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
     const pct = Math.max(...BUNDLES.filter((b) => b.was).map((b) => Math.round((1 - b.price / b.was) * 100)));
     if (!isFinite(pct) || new Date(DEAL.ends) <= Date.now()) return '';
     const tag = key === 'bundles' ? 'div' : 'a';
-    return `<${tag} class="deal"${tag === 'a' ? ' href="#bundles"' : ''} aria-label="Limited deal: up to ${pct}% off bundles">
+    return `<${tag} class="deal"${tag === 'a' ? ' href="#bundles"' : ''} aria-label="Limited deal: up to ${pct}% off bundles"><span class="wrap deal__in">
         <span class="deal__tag">LIMITED DEAL</span>
         <span class="deal__pct num">UP TO ${pct}% OFF</span><span class="deal__what">${esc(DEAL.what)}</span>
-        <span class="deal__end"><span class="deal__clock num" data-ends="${DEAL.ends}">${left(DEAL.ends)}</span>${tag === 'a' ? '<span class="deal__go">Shop now</span>' : ''}</span>
-      </${tag}>`;
+        <span class="deal__clock num" data-ends="${DEAL.ends}">${left(DEAL.ends)}</span>${tag === 'a' ? '<span class="deal__go">Shop now</span>' : ''}
+      </span></${tag}>`;
+  }
+
+
+  /* ------------------------------------------------------------ the community goal and the recent buyers (T-1253). One JSON
+   * file the store reads every minute (FEED_URL), from the game's PetsCelebrations goal and Tebex's payments:
+   *   { "updated": "2026-11-06T20:00:00Z", "goal": { "current": 31.96, "target": 50, "reached": 12 },
+   *     "recent": [ { "name": "Steve", "item": "MVP Bundle", "at": "2026-11-06T19:58:00Z" } ] }
+   * Empty or unreachable: the sample, marked SAMPLE (nothing serves the file yet). */
+  const FEED_URL = '';
+  const FEED_SAMPLE = { goal: { current: 31.96, target: 50, reached: 12 }, recent: [
+    { name: 'PixelPaws', item: 'MVP Bundle', min: 3 }, { name: 'Sprinkle', item: '2,500 Gems', min: 11 },
+    { name: 'MintyFox', item: 'Pet Club', min: 26 }, { name: 'NovaBlade', item: 'VIP Rank', min: 48 },
+    { name: 'Bara', item: 'Gem Vault', min: 75 }, { name: 'Okane', item: 'Starter Pack', min: 122 }] };
+  const feed = { data: FEED_SAMPLE, live: false };
+  const money = (n) => '$' + (Math.round(n * 100) % 100 ? n.toFixed(2) : String(Math.round(n))).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  function ago(r) {
+    const m = r.at ? Math.max(0, Math.round((Date.now() - new Date(r.at)) / 6e4)) : r.min || 0;
+    return m < 1 ? 'just now' : m < 60 ? `${m}m ago` : m < 1440 ? `${Math.floor(m / 60)}h ago` : `${Math.floor(m / 1440)}d ago`;
+  }
+  function goalHTML() {
+    const g = feed.data.goal || {}, cur = +g.current || 0, tgt = +g.target || 0;
+    const pct = tgt > 0 ? Math.min(100, cur / tgt * 100) : 0;
+    const left = Math.max(0, tgt - cur), recent = (feed.data.recent || []).slice(0, 6);
+    const badge = `<span class="live${feed.live ? '' : ' is-sample'}"><i></i>${feed.live ? 'LIVE' : 'SAMPLE'}</span>`;
+    return `
+      <section class="cg" aria-label="Community goal and recent buyers">
+        <div class="goal panel">
+          <div class="goal__top"><span class="goal__ic"><img src="img/pass/rare_key.png" alt=""></span>
+            <div><h2 class="goal__h plain">Community goal ${badge}</h2><p class="goal__sub">Every <b>${money(tgt)}</b> spent on the store unlocks a <b>Key All</b>: a crate key for everyone online.</p></div>
+            ${g.reached ? `<span class="goal__n"><b class="num">${(+g.reached).toLocaleString('en-US')}</b><small>Key Alls so far</small></span>` : ''}</div>
+          <div class="goal__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}"><span class="goal__fill" data-pct="${pct.toFixed(1)}"></span>
+            <span class="goal__amt"><span><span class="num">${money(cur)}</span>/${money(tgt)}</span></span></div>
+          <p class="goal__foot"><b>${money(left)}</b> to the next Key All. Whoever fills it gets the GG wave.</p>
+        </div>
+        <div class="recent panel">
+          <h2 class="recent__h plain">Recent buyers</h2>
+          <ul class="recent__list">${recent.map((r) => `<li title="${esc(r.name)} bought ${esc(r.item || '')}"><img src="https://mc-heads.net/body/${encodeURIComponent(r.name)}/78" alt="" loading="lazy"><b>${esc(r.name)}</b><small>${esc(ago(r))}</small></li>`).join('')}</ul>
+        </div>
+      </section>`;
+  }
+  function goalFill() {
+    const f = $('.goal__fill'); if (!f) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => { f.style.width = f.dataset.pct + '%'; }));
+  }
+  async function feedLoad() {
+    if (!FEED_URL) return;
+    try {
+      const r = await fetch(FEED_URL, { cache: 'no-store' });
+      if (!r.ok) throw new Error(r.status);
+      const j = await r.json();
+      if (j && j.goal) { feed.data = j; feed.live = true; }
+    } catch (e) { return; }
+    const box = $('.cg');
+    if (box) { box.outerHTML = goalHTML(); goalFill(); }
+  }
+
+  /* online now (T-1253, like oneblockmc.net): the server's own status, read in the browser from mcstatus.io every minute */
+  const STATUS_URL = 'https://api.mcstatus.io/v2/status/java/play.petsmc.net';
+  async function onlineLoad() {
+    const pill = $('#online');
+    try {
+      const r = await fetch(STATUS_URL, { cache: 'no-store' });
+      const j = await r.json();
+      if (!j.online || !j.players) throw new Error('offline');
+      $('#online-n').textContent = (+j.players.online).toLocaleString('en-US');
+      pill.hidden = false;
+    } catch (e) { pill.hidden = true; }
+  }
+  /* the Discord box: discord.gg/petsmc, and how many are online there (Discord's public invite counts, when the browser may read them) */
+  const DISCORD_URL = 'https://discord.gg/petsmc';
+  async function discordLoad() {
+    try {
+      const r = await fetch('https://discord.com/api/v10/invites/petsmc?with_counts=true');
+      const j = await r.json();
+      const n = j.approximate_presence_count;
+      if (typeof n === 'number' && n > 0) $('#dc-k').innerHTML = `<i></i>${n.toLocaleString('en-US')} online`;
+    } catch (e) { /* the box still says Discord */ }
   }
 
   /* ------------------------------------------------------------ live leaderboards (T-1251): the main boards only, from the
@@ -1053,14 +1180,13 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
         <span class="tile__text"><span class="tile__title lab">${esc(c.name)}</span></span>
         ${c.tile === 'gems' || c.tile === 'club' ? `<span class="tile__clip">${artHTML(c.art)}</span>` : artHTML(c.art)}
       </a>`).join('');
-    // no welcome and no How to buy under the offers (owner 2026-11-06, T-1251: "instead of the clutter of how to buy and what
-    // pets is"): the live boards there; the fairness line (monetization.md section 6) is in the footer
+    // under the offers: the community goal and the recent buyers (T-1253), then the live boards (T-1251: no welcome and no How
+    // to buy, "the clutter of how to buy and what pets is"); no thanks line under them (T-1253: "get rid of all of the bottom
+    // text except for contact and copyright")
     return `
       <section class="tiles" aria-label="Categories">${tiles}</section>
-      ${lbHTML()}
-      <p class="thanks">Every purchase helps keep PetsMC online and pays for new pets and updates.<br>
-        <img src="img/gems_1000.webp" alt="">Thank you for supporting the server! Need help? Questions about a purchase or a rank?<br>
-        Open a ticket on our <a href="#" class="js-discord">Discord</a>.</p>`;
+      ${goalHTML()}
+      ${lbHTML()}`;
   }
 
   const pageNav = () => `<div class="pagenav"><a class="btn btn--ghost" href="#">${IC.home}<span>Back to store</span></a><button class="btn c-blue" type="button" data-open="cats">${IC.list}<span>Browse categories</span></button></div>`;
@@ -1207,8 +1333,9 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
   function route() {
     const k = location.hash.replace('#', '');
     const key = TITLES[k] !== undefined ? k : '';
-    view.innerHTML = dealHTML(key) + (key === '' ? home() : key === 'ranks' ? ranks() : key === 'bundles' ? bundles() : picker(key));
-    if (key === '') { lbShow(lb.i); lbTick(); }
+    $('#deal-slot').innerHTML = dealHTML(key);
+    view.innerHTML = key === '' ? home() : key === 'ranks' ? ranks() : key === 'bundles' ? bundles() : picker(key);
+    if (key === '') { lbShow(lb.i); lbTick(); goalFill(); }
     document.title = key ? `PetsMC Store · ${TITLES[key]}` : 'PetsMC Store';
     renderNav(key);
     wireDiscord();
@@ -1221,7 +1348,7 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
       <li><a class="c-${c.c}" href="#${c.key}" ${c.key === current ? 'aria-current="page"' : ''} data-close><span><span class="nav__t">${esc(c.name)}</span></span></a></li>`).join('');
   }
   function wireDiscord() {
-    document.querySelectorAll('.js-discord, #discord-sq').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); toast('Discord invite link not set yet: add it before launch.'); }));
+    document.querySelectorAll('.js-discord').forEach((a) => { a.href = DISCORD_URL; a.target = '_blank'; a.rel = 'noopener'; });
   }
 
   /* ------------------------------------------------------------ overlays */
@@ -1347,6 +1474,9 @@ a.deal:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #e0700f; }
   window.addEventListener('hashchange', () => { close(); route(); });
   renderUser(); renderCart(); route();
   lbLoad(); setInterval(lbLoad, 60000);
+  feedLoad(); setInterval(feedLoad, 60000);
+  onlineLoad(); setInterval(onlineLoad, 60000);
+  discordLoad();
   setInterval(() => { const u = $('.lbx__upd'); if (u) u.textContent = lbAgo(); }, 30000);
 })();
 </script>
