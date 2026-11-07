@@ -1226,7 +1226,7 @@ a.deal:hover { background: #ff62b3; }
   const PICK = {
     gems: { opts: GEMS, qty: false, info: (o) => ({ h: 'Gems', s: o.name, c: o.c, lines: [
       ['gem_purple', `Adds <b class="t-purple">${o.n.toLocaleString('en-US')} Gems</b> to your balance as soon as you pay.`],
-      ['stall_orange', 'Spend them in game: in the <b class="t-blue">Gems Store</b> (<b class="t-blue">/store</b>) and all over the server, below.'],
+      ['stall_orange', 'Spend them in game: in the <b class="t-blue">Gems Store</b> (<b class="t-blue">/store</b>) and all over the server.'],
       ['check_green', 'Gems <b class="t-green">never expire</b>.'],
       ['house_blue', 'Logged out? They will be <b class="t-green">waiting</b> the next time you join.']],
       note: 'Gems are a virtual currency for the game. They have no real-world value, cannot be cashed out or moved to other servers, and are not Minecoins.' }) },
@@ -1258,12 +1258,12 @@ a.deal:hover { background: #ff62b3; }
           <button class="btn btn--block btn--xl c-green" type="button" data-add="${o.id}" data-qty="${P.qty ? st.q : 1}">${IC.cart}<span>${label}</span></button>
         </div>
       </section>
+      ${usesHTML(key) /* T-1288, owner 2026-11-07 13:57: the info lines go "below the new 'what it can do' section" */}
       <section class="info panel">
         <h2 class="info__h plain">${esc(info.h)} <span class="c-${info.c || cat.c}">${esc(info.s)}</span></h2>
         <ul>${info.lines.map(([ic, l]) => `<li${P.hl ? ` class="hl c-${ic.split('_')[1]}"` : ''}><span class="info__ic c-${ic.split('_')[1]}"><img class="px" src="img/icons/${ic}.png" alt=""></span><span>${l}</span></li>`).join('')}</ul>
         ${info.note ? `<p class="note">${info.note}</p>` : ''}
       </section>
-      ${usesHTML(key)}
       ${P.track ? trackHTML() : ''}
       ${pageNav()}`;
   }
