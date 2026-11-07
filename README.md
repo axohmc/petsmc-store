@@ -15,6 +15,8 @@ SAMPLE strip, no art tools).
 | `assets/` | **The old Tebex-theme site (T-0690), no longer loaded by the page.** Kept for its Tebex Headless calls (`store.js`) and config, which the new page does not have yet: once Tebex is linked, its checkout moves over |
 | `CNAME`, `robots.txt`, `.nojekyll` | GitHub Pages: the custom domain, no indexing while the gate is on |
 
+Since 2026-11-06 (T-1253) a pink limited-deal band sits above the header, the header has a Discord box and an online-now count, the home has a community goal bar (a Key All every $500, shown as a percent with no money on it, T-1279) and recent buyers' skins (both SAMPLE until `FEED_URL` is served), and the footer is contact and copyright only. Before that (T-1251) the home got a limited-deal bar on top, a Top players board (sample data until the game exports `LB_URL`) instead of the welcome and How to buy, no white subtext on the tiles, and a slowly drifting background.
+
 Not done yet: checkout (the page's cart is a sample; nothing can be bought, as before), the Discord invite, the Founder
 pet hat icon and the link preview image.
 
@@ -40,7 +42,7 @@ static host. Board task T-0690 (owner Axoh, 2026-10-20).
 ## Where it runs
 
 GitHub Pages from the public repo **axohmc/petsmc-store** (only the contents of this folder; this repo stays the source).
-Publish a change: copy this folder over that repo's root and push `main`. DNS: Namecheap, `CNAME store -> axohmc.github.io`.
+Publish a change: copy this folder over that repo's root and push `main` (all of `img/`, not only new files: T-1266 found the live `img/` missing everything added after round 1). DNS: Namecheap, `CNAME store -> axohmc.github.io`.
 
 ## The password gate
 

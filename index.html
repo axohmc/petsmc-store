@@ -1019,16 +1019,16 @@ a.deal:hover { background: #ff62b3; }
 
   /* ------------------------------------------------------------ the community goal and the recent buyers (T-1253). One JSON
    * file the store reads every minute (FEED_URL), from the game's PetsCelebrations goal and Tebex's payments:
-   *   { "updated": "2026-11-06T20:00:00Z", "goal": { "current": 31.96, "target": 50, "reached": 12 },
+   *   { "updated": "2026-11-06T20:00:00Z", "goal": { "current": 319.60, "target": 500, "reached": 12 },
    *     "recent": [ { "name": "Steve", "item": "MVP Bundle", "at": "2026-11-06T19:58:00Z" } ] }
-   * Empty or unreachable: the sample, marked SAMPLE (nothing serves the file yet). */
+   * Empty or unreachable: the sample, marked SAMPLE (nothing serves the file yet).
+   * The page shows a percent only, never the money (T-1279, owner Axoh 2026-11-06: a Key All every $500, "it shows % instead of money"). */
   const FEED_URL = '';
-  const FEED_SAMPLE = { goal: { current: 31.96, target: 50, reached: 12 }, recent: [
+  const FEED_SAMPLE = { goal: { current: 319.60, target: 500, reached: 12 }, recent: [
     { name: 'PixelPaws', item: 'MVP Bundle', min: 3 }, { name: 'Sprinkle', item: '2,500 Gems', min: 11 },
     { name: 'MintyFox', item: 'Pet Club', min: 26 }, { name: 'NovaBlade', item: 'VIP Rank', min: 48 },
     { name: 'Bara', item: 'Gem Vault', min: 75 }, { name: 'Okane', item: 'Starter Pack', min: 122 }] };
   const feed = { data: FEED_SAMPLE, live: false };
-  const money = (n) => '$' + (Math.round(n * 100) % 100 ? n.toFixed(2) : String(Math.round(n))).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   function ago(r) {
     const m = r.at ? Math.max(0, Math.round((Date.now() - new Date(r.at)) / 6e4)) : r.min || 0;
     return m < 1 ? 'just now' : m < 60 ? `${m}m ago` : m < 1440 ? `${Math.floor(m / 60)}h ago` : `${Math.floor(m / 1440)}d ago`;
@@ -1036,17 +1036,17 @@ a.deal:hover { background: #ff62b3; }
   function goalHTML() {
     const g = feed.data.goal || {}, cur = +g.current || 0, tgt = +g.target || 0;
     const pct = tgt > 0 ? Math.min(100, cur / tgt * 100) : 0;
-    const left = Math.max(0, tgt - cur), recent = (feed.data.recent || []).slice(0, 6);
+    const shown = Math.floor(pct), recent = (feed.data.recent || []).slice(0, 6);   // floor: 100% only when it is really full
     const badge = `<span class="live${feed.live ? '' : ' is-sample'}"><i></i>${feed.live ? 'LIVE' : 'SAMPLE'}</span>`;
     return `
       <section class="cg" aria-label="Community goal and recent buyers">
         <div class="goal panel">
           <div class="goal__top"><span class="goal__ic"><img src="img/pass/rare_key.png" alt=""></span>
-            <div><h2 class="goal__h plain">Community goal ${badge}</h2><p class="goal__sub">Every <b>${money(tgt)}</b> spent on the store unlocks a <b>Key All</b>: a crate key for everyone online.</p></div>
+            <div><h2 class="goal__h plain">Community goal ${badge}</h2><p class="goal__sub">Every purchase fills the bar. At <b>100%</b> everyone online gets a <b>Key All</b>: a crate key each.</p></div>
             ${g.reached ? `<span class="goal__n"><b class="num">${(+g.reached).toLocaleString('en-US')}</b><small>Key Alls so far</small></span>` : ''}</div>
-          <div class="goal__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}"><span class="goal__fill" data-pct="${pct.toFixed(1)}"></span>
-            <span class="goal__amt"><span class="lab"><span class="num">${money(cur)}</span>/${money(tgt)}</span></span></div>
-          <p class="goal__foot"><b>${money(left)}</b> to the next Key All. Whoever fills it gets the GG wave.</p>
+          <div class="goal__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${shown}"><span class="goal__fill" data-pct="${pct.toFixed(1)}"></span>
+            <span class="goal__amt"><span class="lab"><span class="num">${shown}%</span></span></span></div>
+          <p class="goal__foot"><b>${100 - shown}%</b> to the next Key All. Whoever fills it gets the GG wave.</p>
         </div>
         <div class="recent panel">
           <h2 class="recent__h plain">Recent buyers</h2>
