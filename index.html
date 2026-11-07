@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="The official PetsMC store: Gems, ranks, bundles, the Gem Vault and the Pet Club. Cosmetics and comforts only.">
+<meta name="description" content="The official PetsMC store: Gems, ranks, bundles and the Pet Club. Cosmetics and comforts only.">
 <meta name="theme-color" content="#ff4da9">
 <title>PetsMC Store</title>
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
@@ -194,7 +194,7 @@ main { display: flex; flex-direction: column; gap: 30px; padding-block: 30px 56p
 /* ---------------------------------------------------------------- home: category tiles */
 .tiles {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px;
-  grid-template-areas: "bundles gems" "bundles ranks" "vault club";
+  grid-template-areas: "bundles gems" "bundles ranks" "club club";
 }
 .tile {
   position: relative; display: flex; align-items: flex-start; min-height: 196px; padding: 38px 40px;
@@ -219,12 +219,9 @@ main { display: flex; flex-direction: column; gap: 30px; padding-block: 30px 56p
 .tile--ranks { grid-area: ranks; min-height: 220px; }
 .tile--ranks .art { height: 90%; top: 6%; bottom: auto; right: 3%; align-items: center; }
 .tile--ranks .tile__text { max-width: 46%; }
-.tile--vault { grid-area: vault; }      /* T-1246 (owner 2026-11-06): the Gem Vault in the Pet Pass's place */
-.tile--vault .art { height: 88%; right: 2%; bottom: 3%; }
 .tile--club { grid-area: club; }
 .tile--club .art { height: 118%; right: -4%; bottom: -24%; }
-.tile--club .tile__text, .tile--vault .tile__text, .tile--gems .tile__text { max-width: 52%; }
-.tile--vault .tile__title { white-space: nowrap; }   /* "GEM VAULT" on one line, as PET PASS was */
+.tile--club .tile__text, .tile--gems .tile__text { max-width: 52%; }
 
 /* countdown tag (white chip over the tile's corner) */
 .timer {
@@ -393,7 +390,7 @@ a.deal:hover { background: #ff62b3; }
 .lbx__note { color: var(--ink-3); font-size: 13px; }
 .v-gold { color: #e8a500; } .v-green { color: #2fb52a; } .v-red { color: #ff4444; } .v-ink { color: var(--ink); }
 
-/* ---------------------------------------------------------------- product picker (Gems, Gem Vault, Pet Club) */
+/* ---------------------------------------------------------------- product picker (Gems, Pet Club) */
 .prod { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); overflow: hidden; }
 .prod__art {
   position: relative; display: grid; place-items: center; padding: 32px; min-height: 360px;
@@ -692,12 +689,11 @@ a.deal:hover { background: #ff62b3; }
   .acct__head { width: 46px; height: 46px; } .acct__head svg { width: 24px; height: 24px; }
   .cartbtn { width: 66px; height: 66px; } .cartbtn svg { width: 30px; height: 30px; }
   .ip { font-size: 15px; gap: 8px; padding-left: 12px; } .ip__copy { padding: 6px 9px 4px; font-size: 13px; }
-  .tiles { grid-template-columns: minmax(0, 1fr); grid-template-areas: "bundles" "gems" "ranks" "vault" "club"; }
-  .tile--vault .art { height: 70%; right: 1%; bottom: 6%; }
+  .tiles { grid-template-columns: minmax(0, 1fr); grid-template-areas: "bundles" "gems" "ranks" "club"; }
   .tile { padding: 28px 24px; min-height: 170px; }
   .tile--bundles { min-height: 300px; }
   .tile__title { font-size: 38px; }
-  .tile__text, .tile--ranks .tile__text, .tile--club .tile__text, .tile--vault .tile__text, .tile--gems .tile__text { max-width: 60%; }
+  .tile__text, .tile--ranks .tile__text, .tile--club .tile__text, .tile--gems .tile__text { max-width: 60%; }
   .timer { font-size: 17px; right: -4px; }
   .deal__in { flex-wrap: wrap; gap: 8px 10px; padding-block: 10px; }
   .deal__pct { font-size: 23px; } .deal__what { font-size: 16px; } .deal__clock { font-size: 15px; } .deal__go { font-size: 14px; }
@@ -871,7 +867,7 @@ a.deal:hover { background: #ff62b3; }
   const ASSETS = [
     { id: 'A1', s: 'need', n: 'Founder pet hat icon', d: 'The Starter Pack row lists the Founder pet hat; it needs a small picture like the other items.', z: 'Transparent PNG, 256 x 256' },
     { id: 'A2', s: 'need', n: 'Link preview image', d: 'What Discord, X and iMessage show when someone pastes store.petsmc.net. Not on the page itself.', z: 'PNG or JPG, 1200 x 630' },
-    { id: 'H', s: 'have', n: 'Already have (used as is)', d: 'The store logo and the paw (the owner\'s, 2026-11-05: header, browser tab, footer, empty cart), every store render in the pixel look (gem packs, Starter and Club gifts, rank tags, the three rank bundles, Pet Pass, Pet Club, Club tag, the Gem Vault), the account\'s person icon, and the menus\' glyph patterns (the page draws them itself).', z: 'textures/branding/, docs/store-renders-20261027/renders/' }
+    { id: 'H', s: 'have', n: 'Already have (used as is)', d: 'The store logo and the paw (the owner\'s, 2026-11-05: header, browser tab, footer, empty cart), every store render in the pixel look (gem packs, Starter and Club gifts, rank tags, the three rank bundles, Pet Pass, Pet Club, Club tag), the account\'s person icon, and the menus\' glyph patterns (the page draws them itself).', z: 'textures/branding/, docs/store-renders-20261027/renders/' }
   ];
 
   /* ------------------------------------------------------------ the sample catalogue (proposed prices from docs/design/monetization.md; the bundles are samples) */
@@ -881,8 +877,7 @@ a.deal:hover { background: #ff62b3; }
     { key: 'bundles', name: 'Bundles', sub: 'The best perks all in one', c: 'green', tile: 'bundles', g: 'gift', art: { src: 'img/bundles_gift.webp', slot: 'have' }, ends: '2026-11-30T08:00:00Z' },
     { key: 'gems', name: 'Gems', sub: 'Store currency', c: 'teal', tile: 'gems', g: 'gem', art: { src: 'img/gems_2500.webp', slot: 'have' } },
     { key: 'ranks', name: 'Ranks', sub: 'Show off with a shiny tag!', c: 'blue', tile: 'ranks', g: 'crown', art: { src: 'img/ranks.webp', slot: 'have' } },
-    // T-1246 (owner Axoh 2026-11-06: "replace the pet pass with gem vault since we dont need it since its under pet club now"; the Pass is in the Club, T-1245)
-    { key: 'vault', name: 'Gem Vault', sub: '2,500 Gems in 2 weeks of play', c: 'gold', tile: 'vault', g: 'gem', art: { src: 'img/gem_vault.webp', slot: 'have' } },
+    // no Gem Vault (T-1287, owner Axoh 2026-11-06: "remove the gem vault off of the site thats gonna be a micro purchase in game")
     { key: 'club', name: 'Pet Club', sub: 'Pet Pass + Gems every month', c: 'pink', tile: 'club', g: 'paw', art: { src: 'img/pet_club.webp', slot: 'have' } }
   ];
   const CAT = Object.fromEntries(CATS.map((c) => [c.key, c]));
@@ -894,7 +889,6 @@ a.deal:hover { background: #ff62b3; }
     { id: 'g13500', c: 'orange', name: '13,500 Gems', n: 13500, price: 79.99, src: 'img/gems_13500.webp', flag: 'Popular' },
     { id: 'g28000', c: 'pink', name: '28,000 Gems', n: 28000, price: 139.99, src: 'img/gems_28000.webp', flag: 'Best value' }
   ];
-  const VAULT = [{ id: 'vault', name: 'Gem Vault', price: 4.99, src: 'img/gem_vault.webp' }];
   const CLUB = [{ id: 'club', name: 'Pet Club', price: 9.99, sub: true, src: 'img/pet_club.webp' }];   // $9.99 with the Pet Pass in it (owner 2026-11-06, T-1245)
   const RANKS = [
     { id: 'vip', name: 'VIP', kind: 'Lifetime', price: 4.99, per: '/ lifetime', src: 'img/rank_vip.webp' },
@@ -914,7 +908,7 @@ a.deal:hover { background: #ff62b3; }
     ['VIP lounge at spawn', Y, Y, Y, Y, Y]
   ];
   const ITEM = {}; // id -> {name, price, img|null, sub}
-  [...GEMS, ...VAULT, ...CLUB].forEach((o) => { ITEM[o.id] = { name: o.id === 'vault' ? 'Gem Vault: break it open' : o.name, price: o.price, img: o.src || null, sub: !!o.sub }; });
+  [...GEMS, ...CLUB].forEach((o) => { ITEM[o.id] = { name: o.name, price: o.price, img: o.src || null, sub: !!o.sub }; });
   RANKS.forEach((r) => { if (!ITEM[r.id]) ITEM[r.id] = { name: r.name + ' Rank', price: r.price, img: r.src, sub: !!r.sub }; });
 
   const BUNDLES = [
@@ -975,7 +969,7 @@ a.deal:hover { background: #ff62b3; }
   /* ------------------------------------------------------------ state */
   const store = { get(k) { try { return JSON.parse(localStorage.getItem('pm-prev-' + k)); } catch (e) { return null; } },
                   set(k, v) { try { localStorage.setItem('pm-prev-' + k, JSON.stringify(v)); } catch (e) { /* private window */ } } };
-  let cart = (store.get('cart') || []).filter((l) => ITEM[l.id]);   // a line for something no longer sold (the Pet Pass) drops
+  let cart = (store.get('cart') || []).filter((l) => ITEM[l.id]);   // a line for something no longer sold (the Pet Pass, the Gem Vault) drops
   let user = store.get('user');
   let edition = 'java';
   let pending = null; // an item waiting for login
@@ -1018,24 +1012,23 @@ a.deal:hover { background: #ff62b3; }
 
 
   /* ------------------------------------------------------------ the community goal and the recent buyers (T-1253). One JSON
-   * file the store reads every minute (FEED_URL), from the game's PetsCelebrations goal and Tebex's payments:
-   *   { "updated": "2026-11-06T20:00:00Z", "goal": { "current": 319.60, "target": 500, "reached": 12 },
+   * file the store reads every minute (FEED_URL, T-1286: PetsCelebrations posts it to the creator site), the goal and Tebex's payments:
+   *   { "updated": "2026-11-06T20:00:00Z", "goal": { "percent": 63.9, "reached": 12 },
    *     "recent": [ { "name": "Steve", "item": "MVP Bundle", "at": "2026-11-06T19:58:00Z" } ] }
-   * Empty or unreachable: the sample, marked SAMPLE (nothing serves the file yet).
+   * Empty or unreachable: the sample, marked SAMPLE.
    * The page shows a percent only, never the money (T-1279, owner Axoh 2026-11-06: a Key All every $500, "it shows % instead of money"). */
-  const FEED_URL = '';
-  const FEED_SAMPLE = { goal: { current: 319.60, target: 500, reached: 12 }, recent: [
+  const FEED_URL = 'https://petsmcpromo.com/api/store/feed';
+  const FEED_SAMPLE = { goal: { percent: 63.9, reached: 12 }, recent: [
     { name: 'PixelPaws', item: 'MVP Bundle', min: 3 }, { name: 'Sprinkle', item: '2,500 Gems', min: 11 },
     { name: 'MintyFox', item: 'Pet Club', min: 26 }, { name: 'NovaBlade', item: 'VIP Rank', min: 48 },
-    { name: 'Bara', item: 'Gem Vault', min: 75 }, { name: 'Okane', item: 'Starter Pack', min: 122 }] };
+    { name: 'Bara', item: 'MVP Rank', min: 75 }, { name: 'Okane', item: 'Starter Pack', min: 122 }] };
   const feed = { data: FEED_SAMPLE, live: false };
   function ago(r) {
     const m = r.at ? Math.max(0, Math.round((Date.now() - new Date(r.at)) / 6e4)) : r.min || 0;
     return m < 1 ? 'just now' : m < 60 ? `${m}m ago` : m < 1440 ? `${Math.floor(m / 60)}h ago` : `${Math.floor(m / 1440)}d ago`;
   }
   function goalHTML() {
-    const g = feed.data.goal || {}, cur = +g.current || 0, tgt = +g.target || 0;
-    const pct = tgt > 0 ? Math.min(100, cur / tgt * 100) : 0;
+    const g = feed.data.goal || {}, pct = Math.max(0, Math.min(100, +g.percent || 0));
     const shown = Math.floor(pct), recent = (feed.data.recent || []).slice(0, 6);   // floor: 100% only when it is really full
     const badge = `<span class="live${feed.live ? '' : ' is-sample'}"><i></i>${feed.live ? 'LIVE' : 'SAMPLE'}</span>`;
     return `
@@ -1050,7 +1043,7 @@ a.deal:hover { background: #ff62b3; }
         </div>
         <div class="recent panel">
           <h2 class="recent__h plain">Recent buyers</h2>
-          <ul class="recent__list">${recent.map((r) => `<li title="${esc(r.name)} bought ${esc(r.item || '')}"><img src="https://mc-heads.net/body/${encodeURIComponent(r.name)}/78" alt="" loading="lazy"><b>${esc(r.name)}</b><small>${esc(ago(r))}</small></li>`).join('')}</ul>
+          ${recent.length ? '' : '<p class="goal__foot">No buyers yet.</p>'}<ul class="recent__list">${recent.map((r) => `<li title="${esc(r.name)} bought ${esc(r.item || '')}"><img src="https://mc-heads.net/body/${encodeURIComponent(r.name)}/78" alt="" loading="lazy"><b>${esc(r.name)}</b><small>${esc(ago(r))}</small></li>`).join('')}</ul>
         </div>
       </section>`;
   }
@@ -1201,7 +1194,7 @@ a.deal:hover { background: #ff62b3; }
 
   const pageNav = () => `<div class="pagenav"><a class="btn btn--ghost" href="#">${IC.home}<span>Back to store</span></a><button class="btn c-blue" type="button" data-open="cats">${IC.list}<span>Browse categories</span></button></div>`;
 
-  // product picker: gems, the Gem Vault, club
+  // product picker: gems, club
   const PICK = {
     gems: { opts: GEMS, qty: false, info: (o) => ({ h: 'Gems', s: o.name, c: o.c, lines: [
       ['gem_purple', `Adds <b class="t-purple">${o.n.toLocaleString('en-US')} Gems</b> to your balance as soon as you pay.`],
@@ -1209,11 +1202,6 @@ a.deal:hover { background: #ff62b3; }
       ['check_green', 'Gems <b class="t-green">never expire</b>.'],
       ['house_blue', 'Logged out? They will be <b class="t-green">waiting</b> the next time you join.']],
       note: 'Gems are a virtual currency for cosmetics. They have no real-world value, cannot be cashed out or moved to other servers, and are not Minecoins.' }) },
-    vault: { opts: VAULT, qty: false, info: () => ({ h: 'Gem Vault', s: 'Up to 2,500 Gems', c: 'gold', lines: [
-      ['gem_purple', 'Your vault holds up to <b class="t-purple">2,500 Gems</b>: <b class="t-green">five times</b> the Gems $4.99 buys.'],
-      ['check_green', 'It fills <b class="t-purple">+180 Gems</b> every day you play, so it is full in <b class="t-gold">14 days</b>.'],
-      ['star_gold', 'Buying it breaks it open: every Gem in it goes to your balance, and it starts filling again.'],
-      ['paw_pink', '<b class="t-pink">Pet Club</b> members open it <b class="t-green">free</b> at the end of every month.']] }) },
     club: { opts: CLUB, qty: false, hl: true, track: true, info: () => ({ h: 'Pet Club', s: 'Monthly', c: 'pink', lines: [
       ['pass_gold', 'The <b class="t-gold">Pet Pass</b> every season: all 100 tiers, shown below. It comes only with the Club.'],
       ['gem_purple', '<b class="t-purple">600 Gems</b> every month.'],
@@ -1339,7 +1327,7 @@ a.deal:hover { background: #ff62b3; }
 
   /* ------------------------------------------------------------ render */
   const view = $('#view');
-  const TITLES = { '': 'PetsMC Store', gems: 'Gems', ranks: 'Ranks', bundles: 'Bundles', vault: 'Gem Vault', club: 'Pet Club' };
+  const TITLES = { '': 'PetsMC Store', gems: 'Gems', ranks: 'Ranks', bundles: 'Bundles', club: 'Pet Club' };
   function route() {
     const k = location.hash.replace('#', '');
     const key = TITLES[k] !== undefined ? k : '';
