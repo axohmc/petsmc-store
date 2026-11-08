@@ -19,8 +19,11 @@ Since 2026-11-06 (T-1288) the Gems, Ranks and Pet Club pages show **what each is
 
 Since 2026-11-06 (T-1253) a pink limited-deal band sits above the header, the header has a Discord box and an online-now count, the home has a community goal bar (a Key All every $500, shown as a percent with no money on it, T-1279) and recent buyers' skins (both SAMPLE until the game posts to `FEED_URL`, T-1286: PetsCelebrations 1.4.0 to `https://petsmcpromo.com/api/store/feed`), and the footer is contact and copyright only. Before that (T-1251) the home got a limited-deal bar on top, a Top players board (sample data until the game exports `LB_URL`) instead of the welcome and How to buy, no white subtext on the tiles, and a slowly drifting background.
 
-Not done yet: checkout (the page's cart is a sample; nothing can be bought, as before), the Discord invite, the Founder
-pet hat icon and the link preview image.
+Since 2026-11-08 (T-1317) the Starter Pack lists the **Founder Cap** with its picture (`img/founder_cap.webp`, the cap's
+own model drawn smooth by `tools/petmc/store-renders/render_hd.py`).
+
+Not done yet: checkout (the page's cart is a sample; nothing can be bought, as before), the Discord invite and the link
+preview image.
 
 The older note on the Tebex-theme site follows.
 

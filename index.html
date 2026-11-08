@@ -525,6 +525,63 @@ a.deal:hover { background: #ff62b3; }
 .note { color: var(--ink-3); font-size: 14px; }
 .pagenav { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
 
+/* ---------------------------------------------------------------- the sidebar on every page but the home (T-1327, owner Axoh
+ * 2026-11-08: "when on anything other than the main page add a sidebar where users can click around, switch gems and
+ * bundles"). On a wide screen it hangs in the empty page to the left of the content, which keeps the header's width; on a
+ * narrower one it takes a column inside it; on a phone it is a row of chips above the page. */
+.shop { position: relative; display: flex; flex-direction: column; gap: 30px; }
+.shop__main { display: flex; flex-direction: column; gap: 30px; min-width: 0; }
+.side { position: absolute; top: 0; bottom: 0; right: calc(100% + 24px); width: 250px; }
+.side__in { position: sticky; top: 24px; display: flex; flex-direction: column; gap: 10px; padding: 16px; }
+.side__h { padding: 2px 4px 4px; font-size: 20px; }
+.side a { position: relative; display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 8px 12px 8px 8px; text-decoration: none;
+  background: color-mix(in srgb, var(--face) 12%, #fff); border: 2px solid color-mix(in srgb, var(--face) 36%, #fff);
+  border-bottom: 5px solid color-mix(in srgb, var(--rim) 60%, #fff); border-radius: var(--r-md); color: var(--deep);
+  font: 400 19px/1.05 var(--f-display); letter-spacing: .03em; text-transform: uppercase; transition: transform .1s, background-color .1s; }
+.side a:hover { transform: translateX(3px); background: color-mix(in srgb, var(--face) 22%, #fff); }
+.side a[aria-current="page"] { background: var(--face); border-color: var(--rim); color: var(--text); text-shadow: 0 2px 0 var(--deep); }
+.side__ic { flex: 0 0 auto; width: 48px; height: 48px; display: grid; place-items: center; border-radius: 10px; background: #fff; }
+.side a[aria-current="page"] .side__ic { background: rgb(255 255 255 / .28); }
+.side__ic img { max-width: 42px; max-height: 42px; width: auto; height: auto; filter: drop-shadow(0 3px 3px rgb(0 0 0 / .18)); }
+.side__ic svg { width: 26px; height: 26px; }
+.side__tag { margin-left: auto; padding: 3px 6px 2px; border-radius: 6px; background: #ffcc24; color: #93241e; font: 900 10.5px/1 var(--f-body); letter-spacing: .06em; border-bottom: 3px solid #f0951f; text-shadow: none; }
+.side__home { margin-top: 4px; }
+/* too narrow for the left margin (1184 px of page plus 274 px of sidebar each side, at the 80 % zoom): a column inside the content */
+@media (max-width: 1439px) and (min-width: 761px) {
+  .wrap.has-side { max-width: 1480px; }
+  .shop { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 24px; align-items: start; }
+  .side { position: relative; inset: auto; width: auto; align-self: stretch; }
+  .side__in { padding: 14px; }
+  .side a { font-size: 17px; }
+}
+
+/* ---------------------------------------------------------------- the Gems page: every pack at once, not a picker (T-1327:
+ * "dont make it a selecting menu make it show all the different packages"); the corner says how many extra Gems it gives
+ * over the smallest pack's rate ("on gems the top left corner needs to show how many extra gems they get") */
+.packs { padding: 26px 26px 28px; display: flex; flex-direction: column; gap: 20px; }
+.packs__h { font-size: 34px; }
+.packs__sub { margin-top: -10px; color: var(--ink-3); }
+.packs__sub b { color: #8a4ae0; }
+.packs__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.pack { position: relative; display: flex; flex-direction: column; overflow: hidden; }
+.pack__hero { position: relative; display: grid; place-items: center; min-height: 230px; padding: 40px 16px 14px;
+  background-color: var(--face); background-image: radial-gradient(closest-side, rgb(255 255 255 / .7), rgb(255 255 255 / 0)), var(--gl, none);
+  background-size: auto, 80px 128px; background-position: center, 8px 6px; }
+.pack__hero .art { width: 100%; display: grid; place-items: center; }
+.pack__hero .art img { max-height: 170px; max-width: 86%; width: auto; filter: drop-shadow(0 10px 10px rgb(0 0 0 / .25)); transition: transform .15s; }
+.pack:hover .pack__hero .art img { transform: scale(1.05) rotate(-2deg); }
+.pack__extra { position: absolute; z-index: 2; top: 12px; left: 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; transform: rotate(-4deg); transform-origin: top left; }
+.pack__extra b { padding: 5px 9px 4px; border-radius: 7px; background: #ff4444; color: #fff; font: 400 19px/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase;
+  border-bottom: 4px solid #d92f3a; text-shadow: 0 2px 0 #6e1a2a; box-shadow: 0 0 0 3px #fff; }
+.pack__extra small { padding: 3px 7px 2px; border-radius: 6px; background: #fff; color: #8a4ae0; font: 900 12px/1 var(--f-body); letter-spacing: .03em; border-bottom: 3px solid rgb(0 0 0 / .12); }
+.pack__flag { position: absolute; z-index: 2; top: 12px; right: 12px; padding: 4px 8px 3px; border-radius: 6px; background: #ffcc24; color: #93241e;
+  font: 900 11px/1 var(--f-body); letter-spacing: .08em; text-transform: uppercase; border-bottom: 3px solid #f0951f; transform: rotate(4deg); }
+.pack__name { font-size: 26px; text-align: center; }
+.pack__body { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px 18px 18px; border-top: 2px solid var(--line); background: var(--cell); }
+.pack__body .price { font-size: 28px; }
+.pack__body .btn { width: 100%; }
+@media (max-width: 1023px) { .packs__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 /* ---------------------------------------------------------------- bundle rows */
 .bundles { display: flex; flex-direction: column; gap: 18px; }
 .bundle { display: grid; grid-template-columns: 240px minmax(0, 1fr) 250px; overflow: hidden; }
@@ -765,6 +822,15 @@ a.deal:hover { background: #ff62b3; }
   .prod__art .art { max-width: 220px; }
   .prod__main { padding: 22px 18px; }
   .opts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .side { position: static; width: auto; margin-inline: -16px; }
+  .side__in { position: static; flex-direction: row; gap: 8px; padding: 2px 16px 8px; overflow-x: auto; background: none; border: 0; border-radius: 0; scrollbar-width: none; }
+  .side__h { display: none; }
+  .side a { flex: 0 0 auto; min-height: 50px; padding: 5px 12px 5px 5px; font-size: 16px; }
+  .side__ic { width: 36px; height: 36px; } .side__ic img { max-width: 32px; max-height: 32px; }
+  .side__tag { display: none; }
+  .side__home { margin-top: 0; order: -1; }
+  .packs { padding: 18px 14px 20px; }
+  .packs__grid { grid-template-columns: minmax(0, 1fr); }
   .bundle { grid-template-columns: minmax(0, 1fr); }
   .bundle__hero { grid-row: auto; min-height: 200px; }
   .foot__row { flex-direction: column; align-items: flex-start; }
@@ -907,9 +973,8 @@ a.deal:hover { background: #ff62b3; }
 
   /* ------------------------------------------------------------ art still to make (the owner's list) */
   const ASSETS = [
-    { id: 'A1', s: 'need', n: 'Founder pet hat icon', d: 'The Starter Pack row lists the Founder pet hat; it needs a small picture like the other items.', z: 'Transparent PNG, 256 x 256' },
     { id: 'A2', s: 'need', n: 'Link preview image', d: 'What Discord, X and iMessage show when someone pastes store.petsmc.net. Not on the page itself.', z: 'PNG or JPG, 1200 x 630' },
-    { id: 'H', s: 'have', n: 'Already have (used as is)', d: 'The store logo and the paw (the owner\'s, 2026-11-05: header, browser tab, footer, empty cart), every store render in the pixel look (gem packs, Starter and Club gifts, rank tags, the three rank bundles, Pet Pass, Pet Club, Club tag), the account\'s person icon, and the menus\' glyph patterns (the page draws them itself).', z: 'textures/branding/, docs/store-renders-20261027/renders/' }
+    { id: 'H', s: 'have', n: 'Already have (used as is)', d: 'The store logo and the paw (the owner\'s, 2026-11-05: header, browser tab, footer, empty cart), every store render in the pixel look (gem packs, Starter and Club gifts, the Founder Cap, rank tags, the three rank bundles, Pet Pass, Pet Club, Club tag), the account\'s person icon, and the menus\' glyph patterns (the page draws them itself).', z: 'textures/branding/, docs/store-renders-20261027/renders/' }
   ];
 
   /* ------------------------------------------------------------ the sample catalogue (proposed prices from docs/design/monetization.md; the bundles are samples) */
@@ -956,7 +1021,7 @@ a.deal:hover { background: #ff62b3; }
   const BUNDLES = [
     // grouped on the page (owner 2026-11-05: "the bundles arent organized well"): start here, rank bundles side by side, every month
     { id: 'b-start', group: 'start', name: 'Starter Pack', chip: 'Bundle', c: 'gold', g: 'gift', src: 'img/starter.webp', lead: 'Everything below, in one purchase:', price: 4.99, once: 'One per player',
-      incl: [['img/gems_1000.webp', '500 Gems'], [null, 'Founder pet hat']] },
+      incl: [['img/gems_1000.webp', '500 Gems'], ['img/founder_cap.webp', 'Founder Cap']] },
     { id: 'b-vip', group: 'rank', name: 'VIP Bundle', chip: 'Bundle', c: 'blue', g: 'crown', src: 'img/bundle_vip.webp', price: 11.99, was: 14.98, sale: true,
       incl: [['img/rank_vip.webp', 'VIP Rank'], ['img/gems_1000.webp', '1,000 Gems']] },
     { id: 'b-mvp', group: 'rank', name: 'MVP Bundle', chip: 'Bundle', c: 'orange', g: 'crown', src: 'img/bundle_mvp.webp', price: 29.99, was: 39.98, sale: true, pop: true,
@@ -1234,12 +1299,11 @@ a.deal:hover { background: #ff62b3; }
       ${lbHTML()}`;
   }
 
-  const pageNav = () => `<div class="pagenav"><a class="btn btn--ghost" href="#">${IC.home}<span>Back to store</span></a><button class="btn c-blue" type="button" data-open="cats">${IC.list}<span>Browse categories</span></button></div>`;
 
   // product picker: gems, club
   const PICK = {
-    gems: { opts: GEMS, qty: false, info: (o) => ({ h: 'Gems', s: o.name, c: o.c, lines: [
-      ['gem_purple', `Adds <b class="t-purple">${o.n.toLocaleString('en-US')} Gems</b> to your balance as soon as you pay.`],
+    gems: { opts: GEMS, qty: false, info: () => ({ h: 'Good to know', lines: [
+      ['gem_purple', 'Adds the pack\'s <b class="t-purple">Gems</b> to your balance as soon as you pay.'],
       ['stall_orange', 'Spend them in game: in the <b class="t-blue">Gems Store</b> (<b class="t-blue">/store</b>) and all over the server.'],
       ['check_green', 'Gems <b class="t-green">never expire</b>.'],
       ['house_blue', 'Logged out? They will be <b class="t-green">waiting</b> the next time you join.']],
@@ -1278,8 +1342,58 @@ a.deal:hover { background: #ff62b3; }
         <ul>${info.lines.map(([ic, l]) => `<li${P.hl ? ` class="hl c-${ic.split('_')[1]}"` : ''}><span class="info__ic c-${ic.split('_')[1]}"><img class="px" src="img/icons/${ic}.png" alt=""></span><span>${l}</span></li>`).join('')}</ul>
         ${info.note ? `<p class="note">${info.note}</p>` : ''}
       </section>
-      ${P.track ? trackHTML() : ''}
-      ${pageNav()}`;
+      ${P.track ? trackHTML() : ''}`;
+  }
+
+  /* the Gems page (T-1327): every pack as its own card, like a shop shelf, not a picker. Extra Gems are counted against the
+   * smallest pack's rate (1,000 for 9.99): the Gems that price would buy at that rate, rounded to the hundred, and what the
+   * pack gives on top of them. */
+  const GEM_RATE = GEMS[0].n / GEMS[0].price;
+  function gemExtra(o) {
+    const base = Math.round(o.price * GEM_RATE / 100) * 100, extra = o.n - base;
+    return extra > 0 ? { extra, pct: Math.round(extra / base * 100) } : null;
+  }
+  function gemsPage() {
+    const card = (o) => {
+      const x = gemExtra(o);
+      return `
+      <article class="pack panel">
+        <div class="pack__hero c-${o.c}" data-glyph="gem">
+          ${x ? `<span class="pack__extra"><b>+${x.pct}% Extra</b><small>+${x.extra.toLocaleString('en-US')} Gems</small></span>` : ''}
+          ${o.flag ? `<span class="pack__flag">${esc(o.flag)}</span>` : ''}
+          ${artHTML({ src: o.src, slot: 'have' })}
+          <h2 class="pack__name lab c-${o.c}">${esc(o.name)}</h2>
+        </div>
+        <div class="pack__body">
+          ${priceHTML(o.price)}
+          <button class="btn btn--block c-green" type="button" data-add="${o.id}">${IC.cart}<span>Purchase</span></button>
+        </div>
+      </article>`;
+    };
+    const info = PICK.gems.info();
+    return `
+      <section class="packs panel" aria-labelledby="packs-h">
+        <h1 class="packs__h plain" id="packs-h">Gems</h1>
+        <p class="packs__sub">Spend <b>Gems</b> in game in the Gems Store (/store). The bigger the pack, the more extra Gems you get.</p>
+        <div class="packs__grid">${GEMS.map(card).join('')}</div>
+      </section>
+      ${usesHTML('gems')}
+      <section class="info panel">
+        <h2 class="info__h plain">${esc(info.h)}</h2>
+        <ul>${info.lines.map(([ic, l]) => `<li><span class="info__ic c-${ic.split('_')[1]}"><img class="px" src="img/icons/${ic}.png" alt=""></span><span>${l}</span></li>`).join('')}</ul>
+        <p class="note">${info.note}</p>
+      </section>`;
+  }
+
+  /* the sidebar on every page but the home (T-1327) */
+  function sideHTML(current) {
+    const link = (c) => `<a class="c-${c.c}" href="#${c.key}"${c.key === current ? ' aria-current="page"' : ''}><span class="side__ic"><img src="${c.art.src}" alt=""></span><span>${esc(c.name)}</span>${c.ends ? '<span class="side__tag">Sale</span>' : ''}</a>`;
+    return `
+      <nav class="side" aria-label="Store categories"><div class="side__in panel">
+        <h2 class="side__h plain">Categories</h2>
+        ${CATS.map(link).join('')}
+        <a class="c-grey side__home" href="#"><span class="side__ic">${IC.home}</span><span>Home</span></a>
+      </div></nav>`;
   }
 
   /* the Pet Pass's tiers (T-1249): TRACK is written by make_pass_track.py from the Season 1 plan */
@@ -1402,8 +1516,7 @@ a.deal:hover { background: #ff62b3; }
       <section class="bsec" aria-labelledby="bs-start"><h2 class="ruled plain" id="bs-start">Start here</h2><p class="bsec__sub">For new players: Gems and a hat to show you were here early.</p>${of('start').map(row).join('')}</section>
       <section class="bsec" aria-labelledby="bs-rank"><h2 class="ruled plain" id="bs-rank">Rank bundles</h2><p class="bsec__sub">A rank and a pile of Gems together, for less than buying them apart.</p><div class="bcards">${of('rank').map(card).join('')}</div></section>
       <section class="bsec" aria-labelledby="bs-month"><h2 class="ruled plain" id="bs-month">Every month</h2><p class="bsec__sub">A subscription: the Pet Pass, Gems and a new cosmetic each month.</p>${of('month').map(row).join('')}</section>
-      <p class="ranknote">Sample bundles and prices: the real ones are set in the final balancing run. The sale timer on the home tile is a sample too.</p>
-      ${pageNav()}`;
+      <p class="ranknote">Sample bundles and prices: the real ones are set in the final balancing run. The sale timer on the home tile is a sample too.</p>`;
   }
 
   function ranks() {
@@ -1420,14 +1533,13 @@ a.deal:hover { background: #ff62b3; }
         <tfoot><tr><td></td>${foot}</tr></tfoot>
       </table></div>
       ${usesHTML('ranks')}
-      <p class="ranknote"><b>Every perk is a cosmetic or a comfort:</b> nothing here makes a pet stronger. A rank is yours forever, and moving up only costs the difference.<br>Perks and prices are the proposed sheet (docs/design/monetization.md), not final.</p>
-      ${pageNav()}`;
+      <p class="ranknote"><b>Every perk is a cosmetic or a comfort:</b> nothing here makes a pet stronger. A rank is yours forever, and moving up only costs the difference.<br>Perks and prices are the proposed sheet (docs/design/monetization.md), not final.</p>`;
   }
 
   /* ------------------------------------------------------------ pictures without flicker (T-1322, owner Axoh 2026-11-08:
    * "make it load the images faster so when i click thru it doesnt flicker in") */
   // every picture is fetched and decoded once at the start (behind the gate) and kept, so a page switch finds them ready
-  const PRELOAD = ["img/bundle_mvp.webp", "img/bundle_mvp_plus_plus.webp", "img/bundle_vip.webp", "img/bundles_gift.webp", "img/club_gift.webp", "img/club_tag.webp", "img/gem_vault.webp", "img/gems_1000.webp", "img/gems_13500.webp", "img/gems_2500.webp", "img/gems_28000.webp", "img/gems_5000.webp", "img/icons/check_green.png", "img/icons/cos_snow_earmuffs.png", "img/icons/cos_top_hat.png", "img/icons/emblem_galaxy.png", "img/icons/equip_orange.png", "img/icons/equip_pink.png", "img/icons/fly_blue.png", "img/icons/gem_purple.png", "img/icons/heart_red.png", "img/icons/house_blue.png", "img/icons/island.png", "img/icons/pass_gold.png", "img/icons/paw_blue.png", "img/icons/paw_pink.png", "img/icons/play_green.png", "img/icons/question_gold.png", "img/icons/ride_orange.png", "img/icons/stall_orange.png", "img/icons/star_gold.png", "img/icons/tricks_red.png", "img/icons/xp_candy.png", "img/lb/best-wave.png", "img/lb/most-kills.png", "img/lb/neon-pets.png", "img/lb/richest.png", "img/lb/top-pet-level.png", "img/lb/trainer-level.png", "img/logo.webp", "img/pass/cookie.png", "img/pass/fly.png", "img/pass/gems.png", "img/pass/items-money_2_bills.png", "img/pass/items-money_3_stack.png", "img/pass/items-money_5_vault.png", "img/pass/leg_cos_key.png", "img/pass/leg_key.png", "img/pass/money_boost.png", "img/pass/monthly_key.png", "img/pass/mut10.png", "img/pass/mut20.png", "img/pass/rare_key.png", "img/pass/speed_pot.png", "img/pass/std_cos_key.png", "img/pass/v_mvppp.png", "img/pass/xp_bag.png", "img/pass/xp_candy.png", "img/pass/xp_jar.png", "img/pass/xp_potion.png", "img/paw.webp", "img/pet_club.webp", "img/pet_pass.webp", "img/rank_mvp.webp", "img/rank_mvp_plus.webp", "img/rank_mvp_plus_plus.webp", "img/rank_vip.webp", "img/rank_vip_plus.webp", "img/ranks.webp", "img/starter.webp"];   // build_live.py writes the img/ file list here; the sample falls back to the names in its own source
+  const PRELOAD = ["img/bundle_mvp.webp", "img/bundle_mvp_plus_plus.webp", "img/bundle_vip.webp", "img/bundles_gift.webp", "img/club_gift.webp", "img/club_tag.webp", "img/founder_cap.webp", "img/gem_vault.webp", "img/gems_1000.webp", "img/gems_13500.webp", "img/gems_2500.webp", "img/gems_28000.webp", "img/gems_5000.webp", "img/icons/check_green.png", "img/icons/cos_snow_earmuffs.png", "img/icons/cos_top_hat.png", "img/icons/emblem_galaxy.png", "img/icons/equip_orange.png", "img/icons/equip_pink.png", "img/icons/fly_blue.png", "img/icons/gem_purple.png", "img/icons/heart_red.png", "img/icons/house_blue.png", "img/icons/island.png", "img/icons/pass_gold.png", "img/icons/paw_blue.png", "img/icons/paw_pink.png", "img/icons/play_green.png", "img/icons/question_gold.png", "img/icons/ride_orange.png", "img/icons/stall_orange.png", "img/icons/star_gold.png", "img/icons/tricks_red.png", "img/icons/xp_candy.png", "img/lb/best-wave.png", "img/lb/most-kills.png", "img/lb/neon-pets.png", "img/lb/richest.png", "img/lb/top-pet-level.png", "img/lb/trainer-level.png", "img/logo.webp", "img/pass/cookie.png", "img/pass/fly.png", "img/pass/gems.png", "img/pass/items-money_2_bills.png", "img/pass/items-money_3_stack.png", "img/pass/items-money_5_vault.png", "img/pass/leg_cos_key.png", "img/pass/leg_key.png", "img/pass/money_boost.png", "img/pass/monthly_key.png", "img/pass/mut10.png", "img/pass/mut20.png", "img/pass/rare_key.png", "img/pass/speed_pot.png", "img/pass/std_cos_key.png", "img/pass/v_mvppp.png", "img/pass/xp_bag.png", "img/pass/xp_candy.png", "img/pass/xp_jar.png", "img/pass/xp_potion.png", "img/paw.webp", "img/pet_club.webp", "img/pet_pass.webp", "img/rank_mvp.webp", "img/rank_mvp_plus.webp", "img/rank_mvp_plus_plus.webp", "img/rank_vip.webp", "img/rank_vip_plus.webp", "img/ranks.webp", "img/starter.webp"];   // build_live.py writes the img/ file list here; the sample falls back to the names in its own source
   const warm = [];
   (PRELOAD || [...new Set(document.documentElement.innerHTML.match(/img\/[\w.-]+\.(?:webp|png)/g) || [])]).forEach((src) => {
     const im = new Image(); im.src = src; warm.push(im); if (im.decode) im.decode().catch(() => {});
@@ -1450,13 +1562,17 @@ a.deal:hover { background: #ff62b3; }
     const k = location.hash.replace('#', '');
     const key = TITLES[k] !== undefined ? k : '';
     document.title = key ? `PetsMC Store · ${TITLES[key]}` : 'PetsMC Store';
-    draw(view, key === '' ? home() : key === 'ranks' ? ranks() : key === 'bundles' ? bundles() : picker(key), () => {
+    const page = key === '' ? home() : key === 'ranks' ? ranks() : key === 'bundles' ? bundles() : key === 'gems' ? gemsPage() : picker(key);
+    view.classList.toggle('has-side', key !== '');
+    draw(view, key === '' ? page : `<div class="shop">${sideHTML(key)}<div class="shop__main">${page}</div></div>`, () => {
       $('#deal-slot').innerHTML = dealHTML(key);
       if (key === '') { lbShow(lb.i); lbTick(); goalFill(); }
       renderNav(key);
       wireDiscord();
       applyGlyphs(view);
       if (key) view.focus({ preventScroll: true });
+      const cur = view.querySelector('.side [aria-current]');   // phones: the chip row starts at the page you are on
+      if (cur) cur.parentElement.scrollLeft = cur.offsetLeft - 16;
       window.scrollTo({ top: 0, behavior: 'instant' });
     }, now);
   }
@@ -1491,8 +1607,8 @@ a.deal:hover { background: #ff62b3; }
     if (t.hasAttribute('data-close')) { close(); return; }
     if (t.dataset.open) { open(t.dataset.open); return; }
     const key = location.hash.replace('#', '');
-    if (t.dataset.i !== undefined) { pickState[key].i = +t.dataset.i; draw(view, picker(key), () => applyGlyphs(view)); return; }
-    if (t.dataset.q !== undefined) { pickState[key].q = +t.dataset.q; draw(view, picker(key), () => applyGlyphs(view)); return; }
+    if (t.dataset.i !== undefined) { pickState[key].i = +t.dataset.i; route(true); return; }
+    if (t.dataset.q !== undefined) { pickState[key].q = +t.dataset.q; route(true); return; }
     if (t.dataset.add) { add(t.dataset.add, +(t.dataset.qty || 1)); return; }
     if (t.dataset.step) { const [id, d] = t.dataset.step.split(':'); bump(id, +d); return; }
     if (t.dataset.rm) { cart = cart.filter((l) => l.id !== t.dataset.rm); saveCart(); }
