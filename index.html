@@ -413,6 +413,14 @@ a.deal:hover { background: #ff62b3; }
 .prod__art .timer { top: 16px; right: 16px; transform: rotate(3deg); }
 .prod__main { display: flex; flex-direction: column; gap: 18px; padding: 30px 32px 32px; min-width: 0; }
 .prod--single .prod__main { justify-content: center; }   /* owner 2026-11-05: "on the pet pass center it" */
+/* one product and nothing to pick (Pet Club): a short banner, not a big frame (T-1334, owner Axoh 2026-11-08: "make the big
+ * frame for the pet club smaller cuz rn its blank except for like 1 line of text and the subscribe button and it makes it
+ * harder to see benefits") */
+.prod--single { grid-template-columns: 240px minmax(0, 1fr); }
+.prod--single .prod__art { min-height: 0; padding: 14px; }
+.prod--single .prod__art .art { max-width: 180px; }
+.prod--single .prod__main { gap: 14px; padding: 20px 32px; }
+.prod--single .prod__main .btn { max-width: 440px; align-self: center; }
 .prod__head { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
 .prod__title { font: 400 34px/1 var(--f-display); color: var(--ink); text-transform: uppercase; letter-spacing: .03em; }
 .price { font-size: 26px; }
@@ -824,6 +832,9 @@ a.deal:hover { background: #ff62b3; }
   .prod__art .art { max-width: 220px; }
   .prod__main { padding: 22px 18px; }
   .opts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .prod--single { grid-template-columns: minmax(0, 1fr); }
+  .prod--single .prod__art { min-height: 0; } .prod--single .prod__art .art { max-width: 130px; }
+  .prod--single .prod__main { padding: 16px 18px 18px; }
   .side { position: static; width: auto; margin-inline: -16px; }
   .side__in { position: static; flex-direction: row; gap: 8px; padding: 2px 16px 8px; overflow-x: auto; background: none; border: 0; border-radius: 0; scrollbar-width: none; }
   .side__h { display: none; }
