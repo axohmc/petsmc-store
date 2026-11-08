@@ -492,16 +492,22 @@ a.deal:hover { background: #ff62b3; }
  * orange, Fly blue, health red ...). Four a row, a short last row centred; two a row on a phone. */
 .uses { padding: 22px 26px 26px; display: flex; flex-direction: column; gap: 16px; }
 .uses__grid { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+/* the card is drawn like the main offer tiles (T-1301, owner Axoh 2026-11-07: "make the background on those cards like the
+ * ones for the main offers"): the meaning's face colour, its section's glyph pattern, the darker rim under it, the name in
+ * the game's label lettering; the line under it in the colour's deep shade so it reads on every face */
 .use { flex: 0 0 calc((100% - 36px) / 4); min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px;
-  padding: 14px 12px 16px; text-align: center;
-  background: color-mix(in srgb, var(--face) 11%, #fff); border: 2px solid color-mix(in srgb, var(--face) 40%, #fff);
-  border-bottom-width: 4px; border-radius: var(--r-md); }
-.use__pic { display: grid; place-items: center; width: 100px; height: 100px; margin-bottom: 4px; background: #fff;
-  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--face) 30%, #fff); border-radius: var(--r-md); }
+  padding: 16px 12px 18px; margin-bottom: 6px; text-align: center; color: var(--deep);
+  background-color: var(--face); background-color: hsl(from var(--face) h s calc(l + 9)); background-image: var(--gl, none); background-size: 80px 128px; background-position: 8px 6px;
+  border-radius: var(--r-md); box-shadow: 0 6px 0 var(--rim); }
+/* no white well behind the icon (owner Axoh 2026-11-07 18:00: "remove the background cards on the icons and then change the
+ * background to be a little bit lighter so it doesn't blend in"; 18:03: "genuinely lighter ... I don't mean fade the saturation"): the card's
+ * face keeps its full saturation and only its lightness goes up 9 points (hsl relative colour; old browsers get the plain face) */
+.use__pic { display: grid; place-items: center; width: 100px; height: 100px; margin-bottom: 4px; }
+.use__pic img { filter: drop-shadow(0 4px 0 rgb(0 0 0 / .16)); }
 .use__pic img { width: 80px; height: 80px; }   /* 16 px art at 4x: a multiple of 20 px at the desktop's 80 % (T-1267) */
-.use__name { font: 400 19px/1.1 var(--f-display); text-transform: uppercase; letter-spacing: .03em; }
-.use__line { color: var(--ink-2); font-size: 14px; line-height: 1.4; }
-.use__line b { font-weight: 900; }
+.use__name { font-size: 21px; margin-bottom: 4px; }
+.use__line { color: var(--deep); font-size: 14px; font-weight: 800; line-height: 1.4; }
+.use__line b { font-weight: 900; color: inherit; }
 .use__from { margin-top: auto; padding: 5px 9px 4px; border-radius: var(--r-sm); background: #fff; border: 2px solid var(--line);
   color: var(--ink-3); font: 900 12px/1 var(--f-body); }
 .use__from b { color: var(--ink); }
@@ -1351,7 +1357,7 @@ a.deal:hover { background: #ff62b3; }
       <section class="uses panel" aria-labelledby="uses-h">
         <h2 class="info__h plain" id="uses-h">${esc(U.h)} <span class="c-${U.c}">${esc(U.s)}</span></h2>
         <ul class="uses__grid">${U.items.map((u) => `
-          <li class="use c-${u.c}"><span class="use__pic"><img class="px" src="img/${u.pic}.png" alt=""></span><b class="use__name t-${u.c}">${esc(u.name)}</b><span class="use__line">${u.line}</span>${u.from ? `<span class="use__from"><b>${esc(u.from)}</b> and up</span>` : ''}</li>`).join('')}</ul>
+          <li class="use c-${u.c}" data-glyph="${(CAT[key] && CAT[key].g) || 'gem'}"><span class="use__pic"><img class="px" src="img/${u.pic}.png" alt=""></span><b class="use__name lab">${esc(u.name)}</b><span class="use__line">${u.line}</span>${u.from ? `<span class="use__from"><b>${esc(u.from)}</b> and up</span>` : ''}</li>`).join('')}</ul>
       </section>`;
   }
 
