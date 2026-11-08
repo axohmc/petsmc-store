@@ -69,7 +69,8 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 
 /* ---------------------------------------------------------------- lettering: the game's label build */
 .lab {
-  --o: max(1.5px, .065em); --drop: calc(2.6 * var(--o));
+  --o: max(1.5px, .065em); --drop: calc(1.2 * var(--o));
+  --shade: color-mix(in srgb, var(--stroke, var(--deep)) 62%, #000);
   display: inline-block; max-width: 100%; margin: 0;
   font-family: var(--f-display); font-weight: 400; line-height: 1.02; letter-spacing: .025em;
   text-transform: uppercase; overflow-wrap: anywhere; color: var(--fill, var(--text));
@@ -79,12 +80,13 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
     var(--o) var(--o) 0 var(--stroke, var(--deep)), calc(-1 * var(--o)) var(--o) 0 var(--stroke, var(--deep)),
     var(--o) calc(-1 * var(--o)) 0 var(--stroke, var(--deep)), calc(-1 * var(--o)) calc(-1 * var(--o)) 0 var(--stroke, var(--deep)),
     /* the drop is the outlined letter moved down, stroke and all (T-1312: it was only the bare letter shape, so the
-       stroke's thickness was missing from it): the same 3 x 3 ring of offsets, each pushed down by --drop */
-    0 var(--drop) 0 var(--stroke, var(--deep)),
-    var(--o) var(--drop) 0 var(--stroke, var(--deep)), calc(-1 * var(--o)) var(--drop) 0 var(--stroke, var(--deep)),
-    0 calc(var(--drop) + var(--o)) 0 var(--stroke, var(--deep)),
-    var(--o) calc(var(--drop) + var(--o)) 0 var(--stroke, var(--deep)), calc(-1 * var(--o)) calc(var(--drop) + var(--o)) 0 var(--stroke, var(--deep)),
-    var(--o) calc(var(--drop) - var(--o)) 0 var(--stroke, var(--deep)), calc(-1 * var(--o)) calc(var(--drop) - var(--o)) 0 var(--stroke, var(--deep));
+       stroke's thickness was missing from it): the same 3 x 3 ring of offsets, each pushed down by --drop, in --shade, the
+       stroke colour taken darker (T-1313, owner: darker than the text, a shorter drop, "too long and bulky") */
+    0 var(--drop) 0 var(--shade),
+    var(--o) var(--drop) 0 var(--shade), calc(-1 * var(--o)) var(--drop) 0 var(--shade),
+    0 calc(var(--drop) + var(--o)) 0 var(--shade),
+    var(--o) calc(var(--drop) + var(--o)) 0 var(--shade), calc(-1 * var(--o)) calc(var(--drop) + var(--o)) 0 var(--shade),
+    var(--o) calc(var(--drop) - var(--o)) 0 var(--shade), calc(-1 * var(--o)) calc(var(--drop) - var(--o)) 0 var(--shade);
 }
 .lab--ink { --fill: var(--face); }
 .plain { font-family: var(--f-display); font-weight: 400; color: var(--ink); text-transform: uppercase; letter-spacing: .03em; line-height: 1.1; }
