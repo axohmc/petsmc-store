@@ -655,6 +655,8 @@ a.deal:hover { background: #ff62b3; }
 .cmp__pop { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); white-space: nowrap; padding: 4px 8px 3px; background: #19b8ff; color: #fff; font: 900 10.5px/1 var(--f-body); letter-spacing: .08em; border-bottom: 3px solid #1287d9; border-radius: 6px; }
 .cmp tbody th { text-align: left; color: var(--ink); font-weight: 800; background: var(--panel); border: 2px solid var(--line); }
 .cmp tbody td { background: var(--panel); border: 2px solid var(--line); color: var(--ink); font-weight: 900; }
+.cmp tbody tr.cmp__sec th { padding: 16px 4px 2px; background: none; border: 0; color: var(--ink); font: 400 20px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; }
+.cmp tbody tr:first-child.cmp__sec th { padding-top: 2px; }
 .cmp .is-pop { background: #e3f6ff !important; border-color: #b9e6ff !important; }
 .cmp thead th.is-pop { border-bottom-color: #19b8ff !important; }
 /* the top rank's column all gold (owner 2026-11-05: "make mvp++ all gold on the tab too the background things for the
@@ -1005,14 +1007,41 @@ a.deal:hover { background: #ff62b3; }
     { id: 'mvppp', name: 'MVP++', kind: 'Lifetime', price: 59.99, per: '/ lifetime', src: 'img/rank_mvp_plus_plus.webp', top: true }
   ];
   const Y = true, N = false;
+  // a row starting with '#' is a section heading (T-1331, owner Axoh 2026-11-08: "add more perks that we have for the ranks
+  // from the doc onto the website cuz rn its stripped"): the team doc's RANKS sheet (its ELITE column is the store's MVP++),
+  // beside the rows that were already here from docs/design/monetization.md
   const PERKS = [
+    ['#Perks'],
     ['Rank badge and name colour', Y, Y, Y, Y, Y],
     ['Chat colour', N, Y, Y, Y, Y],
-    ['/hat (wear a cosmetic on your head)', N, Y, Y, Y, Y],
-    ['Custom join message', N, N, N, Y, Y],
+    ['Money multiplier', '+10%', '+20%', '+30%', '+40%', '+50%'],
+    ['XP multiplier', '+10%', '+20%', '+30%', '+40%', '+50%'],
+    ['Show your item in chat with [item]', Y, Y, Y, Y, Y],
+    ['Extra auction slots (free: 10)', '+1', '+3', '+5', '+7', '+9'],
+    ['Player vaults unlocked', '+1', '+2', '+3', '+4', '+5'],
     ['Extra pet storage (free cap is 60)', '+10', '+20', '+30', '+40', '+50'],
+    ['Luck hatching rare pets', N, N, 'More', 'More', 'Ultra'],
+    ['Incubator hatching slots while offline', N, N, N, '5', '6'],
+    ['Netherite Eggs every week', N, N, N, '1', '3'],
+    ['Max island border and members', N, N, N, N, Y],
+    ['Double Pet Pass rewards', N, N, N, N, Y],
     ['Gems every month', '50', '100', '150', '200', '300'],
-    ['VIP lounge at spawn', Y, Y, Y, Y, Y]
+    ['Custom join message', N, N, N, Y, Y],
+    ['VIP lounge at spawn', Y, Y, Y, Y, Y],
+    ['#Commands'],
+    ['/time and /weather', Y, Y, Y, Y, Y],
+    ['/glow', 'Pink', 'Pink, Green', 'Pink, Green, Orange', 'Pink, Green, Orange, Purple', 'Every colour'],
+    ['/hat (wear a cosmetic on your head)', N, Y, Y, Y, Y],
+    ['/fly', N, Y, Y, Y, Y],
+    ['/enderchest', N, Y, Y, Y, Y],
+    ['/craft', N, N, Y, Y, Y],
+    ['/condense (raw ore to smelted)', N, N, Y, Y, Y],
+    ['Auto rebirth', N, N, N, Y, Y],
+    ['/petsee (see other players\' pets)', N, N, N, N, Y],
+    ['#Kits'],
+    ['Crate keys', '1 Common Key', '1 Rare Key', '3 Rare Keys', '2 Legendary Keys, 3 Rare Keys', '1 Monthly Key, 3 Legendary Keys, 3 Rare Keys'],
+    ['Cosmetics', '1 Common cosmetic', '1 Standard Cosmetic Key', '2 Standard Cosmetic Keys', '1 Legendary Cosmetic Key, 2 Standard Cosmetic Keys', '1 Legendary cosmetic'],
+    ['Armor and tools', 'Iron, Protection II, Efficiency III iron tools', 'Iron, Protection III, Efficiency III diamond tools', 'Diamond, Protection II, Mending, Efficiency III tools', 'Diamond, Protection III, Mending, Efficiency IV tools', 'Diamond, Protection IV, Mending, maxed tools and a mace']
   ];
   const ITEM = {}; // id -> {name, price, img|null, sub}
   [...GEMS, ...CLUB].forEach((o) => { ITEM[o.id] = { name: o.name, price: o.price, img: o.src || null, sub: !!o.sub }; });
@@ -1020,8 +1049,8 @@ a.deal:hover { background: #ff62b3; }
 
   const BUNDLES = [
     // grouped on the page (owner 2026-11-05: "the bundles arent organized well"): start here, rank bundles side by side, every month
-    { id: 'b-start', group: 'start', name: 'Starter Pack', chip: 'Bundle', c: 'gold', g: 'gift', src: 'img/starter.webp', lead: 'Everything below, in one purchase:', price: 4.99, once: 'One per player',
-      incl: [['img/gems_1000.webp', '500 Gems'], ['img/founder_cap.webp', 'Founder Cap']] },
+    { id: 'b-start', group: 'start', name: 'Starter Pack', chip: 'Bundle', c: 'gold', g: 'gift', src: 'img/starter.webp', lead: 'Everything below, in one purchase:', price: 5.99, once: 'One per player',
+      incl: [['img/rank_vip.webp', 'VIP Rank'], ['img/gems_1000.webp', '500 Gems'], ['img/founder_cap.webp', 'Founder Cap']] },
     { id: 'b-vip', group: 'rank', name: 'VIP Bundle', chip: 'Bundle', c: 'blue', g: 'crown', src: 'img/bundle_vip.webp', price: 11.99, was: 14.98, sale: true,
       incl: [['img/rank_vip.webp', 'VIP Rank'], ['img/gems_1000.webp', '1,000 Gems']] },
     { id: 'b-mvp', group: 'rank', name: 'MVP Bundle', chip: 'Bundle', c: 'orange', g: 'crown', src: 'img/bundle_mvp.webp', price: 29.99, was: 39.98, sale: true, pop: true,
@@ -1513,7 +1542,7 @@ a.deal:hover { background: #ff62b3; }
     };
     const of = (g) => BUNDLES.filter((b) => b.group === g);
     return `
-      <section class="bsec" aria-labelledby="bs-start"><h2 class="ruled plain" id="bs-start">Start here</h2><p class="bsec__sub">For new players: Gems and a hat to show you were here early.</p>${of('start').map(row).join('')}</section>
+      <section class="bsec" aria-labelledby="bs-start"><h2 class="ruled plain" id="bs-start">Start here</h2><p class="bsec__sub">For new players: the VIP rank, Gems and a hat to show you were here early.</p>${of('start').map(row).join('')}</section>
       <section class="bsec" aria-labelledby="bs-rank"><h2 class="ruled plain" id="bs-rank">Rank bundles</h2><p class="bsec__sub">A rank and a pile of Gems together, for less than buying them apart.</p><div class="bcards">${of('rank').map(card).join('')}</div></section>
       <section class="bsec" aria-labelledby="bs-month"><h2 class="ruled plain" id="bs-month">Every month</h2><p class="bsec__sub">A subscription: the Pet Pass, Gems and a new cosmetic each month.</p>${of('month').map(row).join('')}</section>
       <p class="ranknote">Sample bundles and prices: the real ones are set in the final balancing run. The sale timer on the home tile is a sample too.</p>`;
@@ -1523,7 +1552,9 @@ a.deal:hover { background: #ff62b3; }
     const colCls = (r) => (r.pop ? 'is-pop' : '') + (r.top ? 'is-top' : '');
     const cell = (v, i) => `<td class="${colCls(RANKS[i])}">${v === true ? IC.yes : v === false ? IC.no : esc(v)}</td>`;
     const head = RANKS.map((r) => `<th scope="col" class="${colCls(r)}">${r.pop ? '<span class="cmp__pop">MOST POPULAR</span>' : ''}<img src="${r.src}" alt=""><span class="cmp__name">${esc(r.name)}</span><span class="cmp__kind${r.sub ? ' cmp__kind--month' : ''}">${r.kind}</span></th>`).join('');
-    const body = PERKS.map(([p, ...v]) => `<tr><th scope="row">${esc(p)}</th>${v.map(cell).join('')}</tr>`).join('');
+    const body = PERKS.map(([p, ...v]) => p[0] === '#'
+      ? `<tr class="cmp__sec"><th scope="rowgroup" colspan="${RANKS.length + 1}">${esc(p.slice(1))}</th></tr>`
+      : `<tr><th scope="row">${esc(p)}</th>${v.map(cell).join('')}</tr>`).join('');
     const foot = RANKS.map((r) => `<td>${priceHTML(r.price)}<span class="per">${r.per}</span><button class="btn c-green" type="button" data-add="${r.id}"><span>${r.sub ? 'Subscribe' : 'Purchase'}</span></button></td>`).join('');
     return `
       <div class="cmp-wrap"><table class="cmp">
@@ -1533,7 +1564,7 @@ a.deal:hover { background: #ff62b3; }
         <tfoot><tr><td></td>${foot}</tr></tfoot>
       </table></div>
       ${usesHTML('ranks')}
-      <p class="ranknote"><b>Every perk is a cosmetic or a comfort:</b> nothing here makes a pet stronger. A rank is yours forever, and moving up only costs the difference.<br>Perks and prices are the proposed sheet (docs/design/monetization.md), not final.</p>`;
+      <p class="ranknote">A rank is yours forever, and moving up only costs the difference. Kits are claimed in game.<br>Perks and prices are the team's rank sheet, not final.</p>`;
   }
 
   /* ------------------------------------------------------------ pictures without flicker (T-1322, owner Axoh 2026-11-08:
