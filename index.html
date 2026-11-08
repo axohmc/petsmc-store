@@ -1027,7 +1027,7 @@ a.deal:hover { background: #ff62b3; }
   const phHTML = (p, extra = '') => `<div class="ph${p.light ? ' ph--light' : ''}${extra}"><b>Art needed</b><span>${esc(p.title)}</span><small>${esc(p.size)}, transparent</small><code>${p.ph}</code></div>`;
   const artHTML = (a, cls = '') => a.ph
     ? `<span class="art art--ph ${cls}" data-slot="${a.ph}">${phHTML(a)}</span>`
-    : `<span class="art ${cls}"${a.slot && a.slot !== 'have' ? ` data-slot="${a.slot}"` : ''}><img src="${a.src}" alt="" loading="lazy"></span>`;
+    : `<span class="art ${cls}"${a.slot && a.slot !== 'have' ? ` data-slot="${a.slot}"` : ''}><img src="${a.src}" alt=""></span>`;
   const priceHTML = (n, unit = 'USD') => `<span class="price lab lab--ink c-gold num">${usd(n)}<small>${unit}</small></span>`;
 
   function left(iso) {
@@ -1424,21 +1424,41 @@ a.deal:hover { background: #ff62b3; }
       ${pageNav()}`;
   }
 
+  /* ------------------------------------------------------------ pictures without flicker (T-1322, owner Axoh 2026-11-08:
+   * "make it load the images faster so when i click thru it doesnt flicker in") */
+  // every picture is fetched and decoded once at the start (behind the gate) and kept, so a page switch finds them ready
+  const PRELOAD = ["img/bundle_mvp.webp", "img/bundle_mvp_plus_plus.webp", "img/bundle_vip.webp", "img/bundles_gift.webp", "img/club_gift.webp", "img/club_tag.webp", "img/gem_vault.webp", "img/gems_1000.webp", "img/gems_13500.webp", "img/gems_2500.webp", "img/gems_28000.webp", "img/gems_5000.webp", "img/icons/check_green.png", "img/icons/cos_snow_earmuffs.png", "img/icons/cos_top_hat.png", "img/icons/emblem_galaxy.png", "img/icons/equip_orange.png", "img/icons/equip_pink.png", "img/icons/fly_blue.png", "img/icons/gem_purple.png", "img/icons/heart_red.png", "img/icons/house_blue.png", "img/icons/island.png", "img/icons/pass_gold.png", "img/icons/paw_blue.png", "img/icons/paw_pink.png", "img/icons/play_green.png", "img/icons/question_gold.png", "img/icons/ride_orange.png", "img/icons/stall_orange.png", "img/icons/star_gold.png", "img/icons/tricks_red.png", "img/icons/xp_candy.png", "img/lb/best-wave.png", "img/lb/most-kills.png", "img/lb/neon-pets.png", "img/lb/richest.png", "img/lb/top-pet-level.png", "img/lb/trainer-level.png", "img/logo.webp", "img/pass/cookie.png", "img/pass/fly.png", "img/pass/gems.png", "img/pass/items-money_2_bills.png", "img/pass/items-money_3_stack.png", "img/pass/items-money_5_vault.png", "img/pass/leg_cos_key.png", "img/pass/leg_key.png", "img/pass/money_boost.png", "img/pass/monthly_key.png", "img/pass/mut10.png", "img/pass/mut20.png", "img/pass/rare_key.png", "img/pass/speed_pot.png", "img/pass/std_cos_key.png", "img/pass/v_mvppp.png", "img/pass/xp_bag.png", "img/pass/xp_candy.png", "img/pass/xp_jar.png", "img/pass/xp_potion.png", "img/paw.webp", "img/pet_club.webp", "img/pet_pass.webp", "img/rank_mvp.webp", "img/rank_mvp_plus.webp", "img/rank_mvp_plus_plus.webp", "img/rank_vip.webp", "img/rank_vip_plus.webp", "img/ranks.webp", "img/starter.webp"];   // build_live.py writes the img/ file list here; the sample falls back to the names in its own source
+  const warm = [];
+  (PRELOAD || [...new Set(document.documentElement.innerHTML.match(/img\/[\w.-]+\.(?:webp|png)/g) || [])]).forEach((src) => {
+    const im = new Image(); im.src = src; warm.push(im); if (im.decode) im.decode().catch(() => {});
+  });
+  // a view is built off the page and swapped in once its pictures are decoded (300 ms at most), so it never shows half-drawn
+  let drawSeq = 0;
+  function draw(el, html, after, now) {
+    const seq = ++drawSeq, tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    const swap = () => { if (seq !== drawSeq) return; el.replaceChildren(...tmp.childNodes); if (after) after(); };
+    const waits = now ? [] : [...tmp.querySelectorAll('img')].filter((im) => im.decode).map((im) => im.decode().catch(() => {}));
+    if (!waits.length) { swap(); return; }
+    Promise.race([Promise.all(waits), new Promise((r) => setTimeout(r, 300))]).then(swap);
+  }
+
   /* ------------------------------------------------------------ render */
   const view = $('#view');
   const TITLES = { '': 'PetsMC Store', gems: 'Gems', ranks: 'Ranks', bundles: 'Bundles', club: 'Pet Club' };
-  function route() {
+  function route(now) {
     const k = location.hash.replace('#', '');
     const key = TITLES[k] !== undefined ? k : '';
-    $('#deal-slot').innerHTML = dealHTML(key);
-    view.innerHTML = key === '' ? home() : key === 'ranks' ? ranks() : key === 'bundles' ? bundles() : picker(key);
-    if (key === '') { lbShow(lb.i); lbTick(); goalFill(); }
     document.title = key ? `PetsMC Store · ${TITLES[key]}` : 'PetsMC Store';
-    renderNav(key);
-    wireDiscord();
-    applyGlyphs(view);
-    if (key) view.focus({ preventScroll: true });
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    draw(view, key === '' ? home() : key === 'ranks' ? ranks() : key === 'bundles' ? bundles() : picker(key), () => {
+      $('#deal-slot').innerHTML = dealHTML(key);
+      if (key === '') { lbShow(lb.i); lbTick(); goalFill(); }
+      renderNav(key);
+      wireDiscord();
+      applyGlyphs(view);
+      if (key) view.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }, now);
   }
   function renderNav(current) {
     $('#nav').innerHTML = [{ key: '', name: 'Home', sub: 'You are browsing this', c: 'grey' }, ...CATS].map((c) => `
@@ -1471,8 +1491,8 @@ a.deal:hover { background: #ff62b3; }
     if (t.hasAttribute('data-close')) { close(); return; }
     if (t.dataset.open) { open(t.dataset.open); return; }
     const key = location.hash.replace('#', '');
-    if (t.dataset.i !== undefined) { pickState[key].i = +t.dataset.i; view.innerHTML = picker(key); applyGlyphs(view); return; }
-    if (t.dataset.q !== undefined) { pickState[key].q = +t.dataset.q; view.innerHTML = picker(key); applyGlyphs(view); return; }
+    if (t.dataset.i !== undefined) { pickState[key].i = +t.dataset.i; draw(view, picker(key), () => applyGlyphs(view)); return; }
+    if (t.dataset.q !== undefined) { pickState[key].q = +t.dataset.q; draw(view, picker(key), () => applyGlyphs(view)); return; }
     if (t.dataset.add) { add(t.dataset.add, +(t.dataset.qty || 1)); return; }
     if (t.dataset.step) { const [id, d] = t.dataset.step.split(':'); bump(id, +d); return; }
     if (t.dataset.rm) { cart = cart.filter((l) => l.id !== t.dataset.rm); saveCart(); }
@@ -1569,7 +1589,7 @@ a.deal:hover { background: #ff62b3; }
   setInterval(() => document.querySelectorAll('[data-ends]').forEach((el) => { el.textContent = left(el.dataset.ends); }), 15000);
 
   window.addEventListener('hashchange', () => { close(); route(); });
-  renderUser(); renderCart(); route();
+  renderUser(); renderCart(); route(true);
   lbLoad(); setInterval(lbLoad, 60000);
   feedLoad(); setInterval(feedLoad, 60000);
   onlineLoad(); setInterval(onlineLoad, 60000);
