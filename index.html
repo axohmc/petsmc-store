@@ -651,6 +651,7 @@ a.deal:hover { background: #ff62b3; }
 
 /* ---------------------------------------------------------------- rank table */
 .cmp-wrap { overflow-x: auto; padding: 18px 4px 6px; margin-inline: -4px; }
+.cmp-pick { display: none; }
 .cmp { width: 100%; min-width: 860px; border-collapse: separate; border-spacing: 6px; table-layout: fixed; }
 .cmp th, .cmp td { padding: 10px 8px; text-align: center; vertical-align: middle; font-size: 14px; line-height: 1.3; }
 .cmp thead th { position: relative; vertical-align: bottom; padding: 18px 8px 14px; background: var(--panel); border: 2px solid var(--line); border-bottom: 5px solid var(--edge); }
@@ -791,29 +792,56 @@ a.deal:hover { background: #ff62b3; }
   .tile__title { font-size: 44px; }
 }
 @media (max-width: 760px) {
-  .bar { grid-template-columns: auto 1fr auto; align-items: center; min-height: 0; padding: 14px; margin-top: 54px; }
-  .brand { grid-column: 1 / -1; grid-row: 1; }
-  .brand__logo { width: min(300px, 78vw); margin-top: -80px; }
-  .acct { grid-row: 2; grid-column: 1 / 3; padding: 8px 14px 8px 8px; }
-  .acct__head { width: 46px; height: 46px; } .acct__head svg { width: 24px; height: 24px; }
-  .cartbtn { width: 66px; height: 66px; } .cartbtn svg { width: 30px; height: 30px; }
-  .ip { font-size: 15px; gap: 8px; padding-left: 12px; } .ip__copy { padding: 6px 9px 4px; font-size: 13px; }
-  .tiles { grid-template-columns: minmax(0, 1fr); grid-template-areas: "bundles" "gems" "ranks" "club"; }
-  .tile { padding: 28px 24px; min-height: 170px; }
-  .tile--bundles { min-height: 300px; }
-  .tile__title { font-size: 38px; }
+  /* the header on a phone (T-1335, owner Axoh 2026-11-08: "make the mobile better also holy shit thats atrocious the
+   * header"): one slim bar, the logo inside it on the left and three square buttons on the right (account, Discord,
+   * cart), then the IP well and the online count on one row; no logo hanging over the bar, no labels on the buttons */
+  .strip { font-size: 11.5px; padding: 5px 12px; line-height: 1.3; }
+  .top { padding-top: 12px; }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 8px; min-height: 0; margin-top: 0; padding: 10px 12px 12px; border-bottom-width: 5px; }
+  .bar::after { content: ""; order: 3; flex-basis: 100%; height: 0; }   /* the row break */
+  .brand { display: contents; }
+  .brand__logo { order: 1; flex: 0 1 150px; min-width: 0; margin: 0 auto 0 0; filter: drop-shadow(0 4px 4px rgb(43 45 58 / .18)); }
+  .acct { order: 2; padding: 0; gap: 0; background: none; border: 0; }
+  .acct > span:last-child { display: none; }
+  .acct__head { width: 44px; height: 44px; border-width: 2px; border-bottom-width: 5px; border-radius: 10px; } .acct__head svg { width: 22px; height: 22px; }
+  .hbtns { order: 2; gap: 8px; }
+  .ip { order: 4; flex: 1 1 0; justify-content: space-between; min-width: 0; gap: 6px; padding: 3px 3px 3px 10px; font-size: 13px; letter-spacing: .03em; }
+  .online__now { display: none; }
+  .ip__t { overflow: hidden; text-overflow: ellipsis; }
+  .ip__copy { padding: 7px 9px 5px; font-size: 12.5px; }
+  .ip__copy svg { width: 14px; height: 14px; }
+  #ip-c { display: none; }   /* the button is its copy icon; it still turns green when copied */
+  .online { order: 4; padding: 4px 9px 3px; font-size: 11px; letter-spacing: .05em; gap: 5px; white-space: nowrap; }
+  .online b { font-size: 14px; }
+  .cartbtn { width: 44px; height: 44px; border-width: 2px; border-bottom-width: 5px; border-radius: 10px; } .cartbtn svg { width: 22px; height: 22px; filter: drop-shadow(0 2px 0 var(--deep)); }
+  .cartbtn__n { top: -8px; right: -8px; min-width: 22px; height: 22px; padding: 0 5px; font-size: 12px; border-width: 2px; }
+  /* the home tiles on a phone (T-1335): Bundles and Pet Club full width, Gems and Ranks side by side, all short, the
+   * name over the picture so a half-width tile still fits it */
+  .tiles { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "bundles bundles" "gems ranks" "club club"; gap: 12px; }
+  .tile { padding: 18px 18px; min-height: 140px; box-shadow: 0 6px 0 var(--rim); margin-bottom: 6px; }
+  .tile--bundles { min-height: 170px; }
+  .tile--ranks { min-height: 140px; }
+  .tile__title { font-size: 30px; }
   .tile__text, .tile--ranks .tile__text, .tile--club .tile__text, .tile--gems .tile__text { max-width: 60%; }
-  .timer { font-size: 17px; right: -4px; }
-  .deal__in { flex-wrap: wrap; gap: 8px 10px; padding-block: 10px; }
-  .deal__pct { font-size: 23px; } .deal__what { font-size: 16px; } .deal__clock { font-size: 15px; } .deal__go { font-size: 14px; }
+  .tile--gems .tile__text, .tile--ranks .tile__text { max-width: 100%; }
+  .tile--gems .tile__title, .tile--ranks .tile__title { font-size: 26px; }
+  .tile--bundles .art { height: 88%; right: 6%; bottom: 6%; }
+  .tile--gems .art { height: 78%; right: -6%; bottom: -10%; }
+  .tile--ranks .art { height: 58%; top: auto; bottom: 8%; right: 6%; }
+  .tile--club .art { height: 120%; right: -2%; bottom: -26%; }
+  .timer { font-size: 14px; top: -10px; right: -2px; padding: 5px 8px 3px; }
+  /* the deal band on one line: no LIMITED DEAL pill or SHOP NOW button (the whole band is the link) */
+  .deal__in { flex-wrap: nowrap; gap: 8px; padding-block: 7px; }
+  .deal__tag, .deal__go { display: none; }
+  .deal__pct { font-size: 19px; text-shadow: 0 2px 0 #a8226d; } .deal__what { font-size: 14px; }
+  .deal__clock { padding: 4px 7px 3px; font-size: 13px; border-radius: 7px; border-bottom-width: 3px; }
   .cg { grid-template-columns: minmax(0, 1fr); }
   .goal { padding: 18px 16px; } .goal__h { font-size: 21px; }
   .goal__top { flex-wrap: wrap; } .goal__top > div { flex: 1 1 0; min-width: 0; }
   .goal__n { order: 3; width: 100%; margin-left: 0; display: flex; align-items: baseline; gap: 8px; text-align: left; }
   .recent__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .hbtns { grid-row: 2; grid-column: 3; gap: 10px; }
   .dcbtn { padding: 0; border: 0; background: none; } .dcbtn__t { display: none; }
-  .dcbtn__ic { width: 66px; height: 66px; } .dcbtn__ic svg { width: 32px; height: 32px; }
+  .dcbtn__ic { width: 44px; height: 44px; border-width: 2px; border-bottom-width: 5px; border-radius: 10px; } .dcbtn__ic svg { width: 24px; height: 24px; }
   .lbx { grid-template-columns: minmax(0, 1fr); }
   .lbx__side { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 2px solid var(--line); padding: 16px; }
   .lbx__h { width: 100%; }
@@ -835,6 +863,27 @@ a.deal:hover { background: #ff62b3; }
   .prod--single { grid-template-columns: minmax(0, 1fr); }
   .prod--single .prod__art { min-height: 0; } .prod--single .prod__art .art { max-width: 130px; }
   .prod--single .prod__main { padding: 16px 18px 18px; }
+  /* Ranks on a phone (T-1335): one rank at a time beside the perks, picked with the buttons above the table */
+  .cmp-pick { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  .cmp-pick button { min-height: 44px; padding: 4px 2px; background: var(--panel); border: 2px solid var(--line); border-bottom: 4px solid var(--edge); border-radius: 10px;
+    color: var(--ink); font: 400 15px/1 var(--f-display); letter-spacing: .02em; text-transform: uppercase; }
+  .cmp-pick button[aria-pressed="true"] { background: #19b8ff; border-color: #1287d9; color: #fff; text-shadow: 0 2px 0 #1d2f91; }
+  .cmp-wrap { overflow: visible; padding-top: 14px; }
+  .cmp { min-width: 0; table-layout: auto; border-spacing: 4px; }
+  .cmp col { width: auto !important; }
+  .cmp th, .cmp td { font-size: 13.5px; padding: 9px 8px; }
+  .cmp tbody td { width: 44%; }
+  .cmp thead img { height: 44px; margin-bottom: 8px; }
+  .cmp tfoot .btn { min-height: 46px; font-size: 16px; }
+  .cmp-wrap[data-col="0"] .cmp tr > :not(:first-child):not(:nth-child(2)) { display: none; }
+  .cmp-wrap[data-col="1"] .cmp tr > :not(:first-child):not(:nth-child(3)) { display: none; }
+  .cmp-wrap[data-col="2"] .cmp tr > :not(:first-child):not(:nth-child(4)) { display: none; }
+  .cmp-wrap[data-col="3"] .cmp tr > :not(:first-child):not(:nth-child(5)) { display: none; }
+  .cmp-wrap[data-col="4"] .cmp tr > :not(:first-child):not(:nth-child(6)) { display: none; }
+  .bundle__hero { min-height: 0; padding: 16px 14px; }
+  .bundle__hero .art img { max-height: 110px; }
+  .bcard__hero { min-height: 0; padding: 22px 12px 14px; }
+  .bcard__hero .art img { max-height: 120px; }
   .side { position: static; width: auto; margin-inline: -16px; }
   .side__in { position: static; flex-direction: row; gap: 8px; padding: 2px 16px 8px; overflow-x: auto; background: none; border: 0; border-radius: 0; scrollbar-width: none; }
   .side__h { display: none; }
@@ -845,7 +894,7 @@ a.deal:hover { background: #ff62b3; }
   .packs { padding: 18px 14px 20px; }
   .packs__grid { grid-template-columns: minmax(0, 1fr); }
   .bundle { grid-template-columns: minmax(0, 1fr); }
-  .bundle__hero { grid-row: auto; min-height: 200px; }
+  .bundle__hero { grid-row: auto; }
   .foot__row { flex-direction: column; align-items: flex-start; }
 }
 /* the whole store at 80 % on wider screens (owner Axoh 2026-11-06 15:20, T-1266: "make it smaller in general like 80% scale
@@ -902,7 +951,7 @@ a.deal:hover { background: #ff62b3; }
         <span class="ip__t" id="ip-t">play.petsmc.net</span>
         <span class="ip__copy"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M11 5V2H2v9h3"/></svg><span id="ip-c">Copy</span></span>
       </button>
-      <span class="online" id="online" hidden><i></i><b class="num" id="online-n">0</b> online now</span>
+      <span class="online" id="online" hidden><i></i><b class="num" id="online-n">0</b> online<span class="online__now"> now</span></span>
     </div>
     <div class="hbtns">
       <a class="dcbtn js-discord" href="https://discord.gg/petsmc" target="_blank" rel="noopener" aria-label="Join the PetsMC Discord">
@@ -1559,6 +1608,14 @@ a.deal:hover { background: #ff62b3; }
       <p class="ranknote">Sample bundles and prices: the real ones are set in the final balancing run. The sale timer on the home tile is a sample too.</p>`;
   }
 
+  // on a phone the table shows the perks beside one rank at a time, picked above it (T-1335); MVP, the most popular, first
+  let rankCol = Math.max(0, RANKS.findIndex((r) => r.pop));
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-rk]'); if (!b) return;
+    rankCol = +b.dataset.rk;
+    const w = document.querySelector('.cmp-wrap'); if (w) w.dataset.col = rankCol;
+    document.querySelectorAll('.cmp-pick [data-rk]').forEach((x) => x.setAttribute('aria-pressed', String(+x.dataset.rk === rankCol)));
+  });
   function ranks() {
     const colCls = (r) => (r.pop ? 'is-pop' : '') + (r.top ? 'is-top' : '');
     const cell = (v, i) => `<td class="${colCls(RANKS[i])}">${v === true ? IC.yes : v === false ? IC.no : esc(v)}</td>`;
@@ -1568,7 +1625,8 @@ a.deal:hover { background: #ff62b3; }
       : `<tr><th scope="row">${esc(p)}</th>${v.map(cell).join('')}</tr>`).join('');
     const foot = RANKS.map((r) => `<td>${priceHTML(r.price)}<span class="per">${r.per}</span><button class="btn c-green" type="button" data-add="${r.id}"><span>${r.sub ? 'Subscribe' : 'Purchase'}</span></button></td>`).join('');
     return `
-      <div class="cmp-wrap"><table class="cmp">
+      <div class="cmp-pick" role="group" aria-label="Pick a rank">${RANKS.map((r, i) => `<button type="button" data-rk="${i}" aria-pressed="${i === rankCol}">${esc(r.name)}</button>`).join('')}</div>
+      <div class="cmp-wrap" data-col="${rankCol}"><table class="cmp">
         <colgroup><col style="width:220px">${RANKS.map(() => '<col>').join('')}</colgroup>
         <thead><tr><th><span class="sr">Perk</span></th>${head}</tr></thead>
         <tbody>${body}</tbody>
