@@ -554,8 +554,8 @@ a.deal:hover { background: #ff62b3; }
 .side__ic svg { width: 26px; height: 26px; }
 .side__tag { margin-left: auto; padding: 3px 6px 2px; border-radius: 6px; background: #ffcc24; color: #93241e; font: 900 10.5px/1 var(--f-body); letter-spacing: .06em; border-bottom: 3px solid #f0951f; text-shadow: none; }
 .side__home { margin-top: 4px; }
-/* too narrow for the left margin (1184 px of page plus 274 px of sidebar each side, at the 80 % zoom): a column inside the content */
-@media (max-width: 1439px) and (min-width: 761px) {
+/* too narrow for the left margin (1184 px of page plus 274 px of sidebar each side): a column inside the content */
+@media (max-width: 1799px) and (min-width: 761px) {
   .wrap.has-side { max-width: 1480px; }
   .shop { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 24px; align-items: start; }
   .side { position: relative; inset: auto; width: auto; align-self: stretch; }
@@ -897,9 +897,10 @@ a.deal:hover { background: #ff62b3; }
   .bundle__hero { grid-row: auto; }
   .foot__row { flex-direction: column; align-items: flex-start; }
 }
-/* the whole store at 80 % on wider screens (owner Axoh 2026-11-06 15:20, T-1266: "make it smaller in general like 80% scale
- * its too big rn"); phones keep their own size, where smaller text would be hard to read */
-@media (min-width: 761px) { html { zoom: .8; } }
+/* 80 % on touch tablets and narrow windows only (T-1266; under 1200 px the header and Ranks table do not fit at full size);
+ * PC is back at full size, 25 % bigger (owner 2026-11-09, T-1400: "make the store 25% bigger on pc"); phones keep their
+ * own size, where smaller text would be hard to read */
+@media (min-width: 761px) and (max-width: 1199px), (min-width: 761px) and (pointer: coarse) { html { zoom: .8; } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
