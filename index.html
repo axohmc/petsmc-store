@@ -1068,37 +1068,33 @@ a.deal:hover { background: #ff62b3; }
   ];
   const Y = true, N = false;
   // a row starting with '#' is a section heading (T-1331, owner Axoh 2026-11-08: "add more perks that we have for the ranks
-  // from the doc onto the website cuz rn its stripped"): the team doc's RANKS sheet (its ELITE column is the store's MVP++),
-  // beside the rows that were already here from docs/design/monetization.md
+  // from the doc onto the website cuz rn its stripped"): the team doc's RANKS sheet (its ELITE column is the store's MVP++).
+  // T-1342 (owner Axoh 2026-11-08: "make it match the game, add all the p2w perks (its not pvp so p2w is fine)"): every row
+  // is a perk the game gives, the same list as the rank cards in /store (PetsStore store.yml perks). Off until designed
+  // ("Drop them for now"): the incubator and auto rebirth (/petsee is built: T-1340, MVP++); off as not built or not a rank perk: chat colour, /hat,
+  // a join message, the VIP lounge and extra pet storage (storage is unlimited for everyone since T-1014).
   const PERKS = [
     ['#Perks'],
     ['Rank badge and name colour', Y, Y, Y, Y, Y],
-    ['Chat colour', N, Y, Y, Y, Y],
-    ['Money multiplier', '+10%', '+20%', '+30%', '+40%', '+50%'],
-    ['XP multiplier', '+10%', '+20%', '+30%', '+40%', '+50%'],
+    ['Money boost (pet tasks, /levels kills, boss bounties)', '+10%', '+20%', '+30%', '+40%', '+50%'],
+    ['Pet XP boost', '+10%', '+20%', '+30%', '+40%', '+50%'],
+    ['Gems every month', '50', '100', '150', '200', '300'],
     ['Show your item in chat with [item]', Y, Y, Y, Y, Y],
     ['Extra auction slots (free: 10)', '+1', '+3', '+5', '+7', '+9'],
-    ['Player vaults unlocked', '+1', '+2', '+3', '+4', '+5'],
-    ['Extra pet storage (free cap is 60)', '+10', '+20', '+30', '+40', '+50'],
+    ['Extra player vaults (/pv; anyone can buy 5 with Gems)', '+1', '+2', '+3', '+4', '+5'],
     ['Luck hatching rare pets', N, N, 'More', 'More', 'Ultra'],
-    ['Incubator hatching slots while offline', N, N, N, '5', '6'],
     ['Netherite Eggs every week', N, N, N, '1', '3'],
-    ['Max island border and members', N, N, N, N, Y],
-    ['Double Pet Pass rewards', N, N, N, N, Y],
-    ['Gems every month', '50', '100', '150', '200', '300'],
-    ['Custom join message', N, N, N, Y, Y],
-    ['VIP lounge at spawn', Y, Y, Y, Y, Y],
+    ['Biggest island border and most members', N, N, N, N, Y],
+    ['Double Pet Pass rewards (in the Pet Club)', N, N, N, N, Y],
     ['#Commands'],
-    ['/time and /weather', Y, Y, Y, Y, Y],
+    ['/ptime and /pweather (your own time and weather)', Y, Y, Y, Y, Y],
     ['/glow', 'Pink', 'Pink, Green', 'Pink, Green, Orange', 'Pink, Green, Orange, Purple', 'Every colour'],
-    ['/hat (wear a cosmetic on your head)', N, Y, Y, Y, Y],
-    ['/fly', N, Y, Y, Y, Y],
+    ['/fly (at spawn and on your island)', N, Y, Y, Y, Y],
     ['/enderchest', N, Y, Y, Y, Y],
     ['/craft', N, N, Y, Y, Y],
-    ['/condense (raw ore to smelted)', N, N, Y, Y, Y],
-    ['Auto rebirth', N, N, N, Y, Y],
-    ['/petsee (see other players\' pets)', N, N, N, N, Y],
-    ['#Kits'],
+    ['/condense (raw ore to ingots)', N, N, Y, Y, Y],
+    ['/petsee (see another player\'s pets)', N, N, N, N, Y],
+    ['#Kits every month (/kits: every kit up to your rank)'],
     ['Crate keys', '1 Common Key', '1 Rare Key', '3 Rare Keys', '2 Legendary Keys, 3 Rare Keys', '1 Monthly Key, 3 Legendary Keys, 3 Rare Keys'],
     ['Cosmetics', '1 Common cosmetic', '1 Standard Cosmetic Key', '2 Standard Cosmetic Keys', '1 Legendary Cosmetic Key, 2 Standard Cosmetic Keys', '1 Legendary cosmetic'],
     ['Armor and tools', 'Iron, Protection II, Efficiency III iron tools', 'Iron, Protection III, Efficiency III diamond tools', 'Diamond, Protection II, Mending, Efficiency III tools', 'Diamond, Protection III, Mending, Efficiency IV tools', 'Diamond, Protection IV, Mending, maxed tools and a mace']
@@ -1528,16 +1524,17 @@ a.deal:hover { background: #ff62b3; }
       use('icons/heart_red', 'red', 'Revive', 'Get back up with <b class="t-red">full health</b> in a boss fight.'),
       use('icons/xp_candy', 'gold', 'XP and Boosters', '<b class="t-gold">XP Candy</b>, XP potions and Booster Cookies in the egg hall shops.')] }),
     ranks: () => {
-      const badge = perk('Rank badge'), space = perk('Extra pet storage'), gems = perk('Gems every month'), lounge = perk('VIP lounge'),
-        chat = perk('Chat colour'), hat = perk('/hat'), join = perk('Custom join message');
+      const badge = perk('Rank badge'), money = perk('Money boost'), gems = perk('Gems every month'), luck = perk('Luck hatching'),
+        eggs = perk('Netherite Eggs'), fly = perk('/fly'), vaults = perk('Extra player vaults'), island = perk('Biggest island');
       return { h: 'What a rank gets you', s: 'Yours forever', c: 'blue', items: [
         badge && use('icons/star_gold', 'gold', 'Rank Badge', 'A badge before your name, and your name in its colour.', perkFrom(badge)),
-        space && use('icons/equip_orange', 'orange', 'Pet Space', `Room for <b class="t-green">${perkSpan(space)}</b> more pets.`, perkFrom(space)),
+        money && use('icons/star_gold', 'green', 'Boosts', `<b class="t-green">${perkSpan(money)}</b> more money from pet tasks, /levels kills and boss bounties, and more Pet XP.`, perkFrom(money)),
         gems && use('icons/gem_purple', 'purple', 'Monthly Gems', `<b class="t-purple">${perkSpan(gems)} Gems</b> every month.`, perkFrom(gems)),
-        lounge && use('icons/house_blue', 'blue', 'VIP Lounge', 'Hang out in the VIP lounge at spawn.', perkFrom(lounge)),
-        chat && use('icons/tricks_red', 'red', 'Chat Colour', 'Chat in your rank\'s colour.', perkFrom(chat)),
-        hat && use('icons/cos_top_hat', 'pink', 'Hats', 'Wear a cosmetic on your head with <b class="t-blue">/hat</b>.', perkFrom(hat)),
-        join && use('icons/play_green', 'green', 'Join Message', 'Your own message when you join.', perkFrom(join))].filter(Boolean) };
+        vaults && use('icons/stall_orange', 'orange', 'Vaults', `Up to <b class="t-green">${perkSpan(vaults).split(' to ').pop()}</b> more vaults to keep items in, with <b class="t-blue">/pv</b>.`, perkFrom(vaults)),
+        fly && use('icons/fly_blue', 'blue', 'Fly', 'Fly yourself with <b class="t-blue">/fly</b> at spawn and on your island.', perkFrom(fly)),
+        luck && use('icons/paw_pink', 'pink', 'Hatch Luck', 'Rarer pets from every egg you hatch.', perkFrom(luck)),
+        eggs && use('icons/equip_pink', 'pink', 'Netherite Eggs', 'Free Netherite Eggs every week.', perkFrom(eggs)),
+        island && use('icons/island', 'green', 'Biggest Island', 'The largest island border and the most members.', perkFrom(island))].filter(Boolean) };
     },
     club: () => {
       const T = TRACK.tiers, kind = (k) => T.filter((t) => t[5] === k);
