@@ -506,7 +506,7 @@ a.deal:hover { background: #ff62b3; }
 .use { flex: 0 0 calc((100% - 36px) / 4); min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px;
   padding: 16px 12px 18px; margin-bottom: 6px; text-align: center; color: var(--deep);
   background-color: var(--face); background-image: var(--gl, none); background-size: 80px 128px; background-position: 8px 6px;
-  border-radius: var(--r-md); box-shadow: 0 0 0 3px #fff, 0 6px 0 3px var(--rim); }   /* white outline round the tile (T-1432) */
+  border-radius: var(--r-md); box-shadow: 0 6px 0 var(--rim); }
 /* no white well behind the icon (owner Axoh 2026-11-07 18:00: "remove the background cards on the icons and then change the
  * background to be a little bit lighter so it doesn't blend in"; 18:03: "genuinely lighter ... I don't mean fade the saturation"): the card's
  * face keeps its full saturation and only its lightness goes up 9 points (hsl relative colour; old browsers get the plain face). Undone by T-1403 (owner 2026-11-09: full colour again) */
