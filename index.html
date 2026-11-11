@@ -505,15 +505,16 @@ a.deal:hover { background: #ff62b3; }
  * the game's label lettering; the line under it in the colour's deep shade so it reads on every face */
 .use { flex: 0 0 calc((100% - 36px) / 4); min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px;
   padding: 16px 12px 18px; margin-bottom: 6px; text-align: center; color: var(--deep);
-  background-color: var(--face); background-color: hsl(from var(--face) h s calc(l + 9)); background-image: var(--gl, none); background-size: 80px 128px; background-position: 8px 6px;
-  border-radius: var(--r-md); box-shadow: 0 6px 0 var(--rim); }
+  background-color: var(--face); background-image: var(--gl, none); background-size: 80px 128px; background-position: 8px 6px;
+  border-radius: var(--r-md); box-shadow: 0 0 0 3px #fff, 0 6px 0 3px var(--rim); }   /* white outline round the tile (T-1432) */
 /* no white well behind the icon (owner Axoh 2026-11-07 18:00: "remove the background cards on the icons and then change the
  * background to be a little bit lighter so it doesn't blend in"; 18:03: "genuinely lighter ... I don't mean fade the saturation"): the card's
- * face keeps its full saturation and only its lightness goes up 9 points (hsl relative colour; old browsers get the plain face) */
+ * face keeps its full saturation and only its lightness goes up 9 points (hsl relative colour; old browsers get the plain face). Undone by T-1403 (owner 2026-11-09: full colour again) */
 .use__pic { display: grid; place-items: center; width: 100px; height: 100px; margin-bottom: 4px; }
-.use__pic img { filter: drop-shadow(0 4px 0 rgb(0 0 0 / .16)); }
+/* white outline one art pixel wide, all round the icon, under the old drop (T-1403): --t is the size of one art pixel */
+.use__pic img { --t: 5px; filter: drop-shadow(var(--t) 0 0 #fff) drop-shadow(calc(-1 * var(--t)) 0 0 #fff) drop-shadow(0 var(--t) 0 #fff) drop-shadow(0 calc(-1 * var(--t)) 0 #fff) drop-shadow(0 4px 0 rgb(0 0 0 / .16)); }
 .use__pic img { width: 80px; height: 80px; }   /* 16 px art at 4x: a multiple of 20 px at the desktop's 80 % (T-1267) */
-.use__name { font-size: 21px; margin-bottom: 4px; }
+.use__name { --fill: #fff; font-size: 21px; margin-bottom: 4px; }   /* pure white letters, the stroke stays the tile colour (T-1403) */
 .use__line { color: var(--deep); font-size: 14px; font-weight: 800; line-height: 1.4; }
 .use__line b { font-weight: 900; color: inherit; }
 .use__from { margin-top: auto; padding: 5px 9px 4px; border-radius: var(--r-sm); background: #fff; border: 2px solid var(--line);
@@ -524,7 +525,7 @@ a.deal:hover { background: #ff62b3; }
   .uses { padding: 18px 14px 20px; }
   .uses__grid { gap: 10px; }
   .use { flex-basis: calc((100% - 10px) / 2); padding: 12px 8px 14px; }
-  .use__pic { width: 80px; height: 80px; } .use__pic img { width: 64px; height: 64px; }   /* phones: a multiple of 16 */
+  .use__pic { width: 80px; height: 80px; } .use__pic img { --t: 4px; width: 64px; height: 64px; }   /* phones: a multiple of 16 */
   .use__name { font-size: 17px; }
   .use__line { font-size: 13px; }
 }
