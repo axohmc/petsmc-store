@@ -1530,7 +1530,7 @@ a.deal:hover { background: #ff62b3; }
         eggs = perk('Netherite Eggs'), fly = perk('/fly'), vaults = perk('Extra player vaults'), island = perk('Biggest island');
       return { h: 'What a rank gets you', s: 'Yours forever', c: 'blue', items: [
         badge && use('icons/star_gold', 'gold', 'Rank Badge', 'A badge before your name, and your name in its colour.', perkFrom(badge)),
-        money && use('icons/star_gold', 'green', 'Boosts', `<b class="t-green">${perkSpan(money)}</b> more money from pet tasks, /levels kills and boss bounties, and more Pet XP.`, perkFrom(money)),
+        money && use('icons/xp_candy', 'green', 'Boosts', `<b class="t-green">${perkSpan(money)}</b> more money from pet tasks, /levels kills and boss bounties, and more Pet XP.`, perkFrom(money)),
         gems && use('icons/gem_purple', 'purple', 'Monthly Gems', `<b class="t-purple">${perkSpan(gems)} Gems</b> every month.`, perkFrom(gems)),
         vaults && use('icons/stall_orange', 'orange', 'Vaults', `Up to <b class="t-green">${perkSpan(vaults).split(' to ').pop()}</b> more vaults to keep items in, with <b class="t-blue">/pv</b>.`, perkFrom(vaults)),
         fly && use('icons/fly_blue', 'blue', 'Fly', 'Fly yourself with <b class="t-blue">/fly</b> at spawn and on your island.', perkFrom(fly)),
